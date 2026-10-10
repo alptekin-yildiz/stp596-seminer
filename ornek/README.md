@@ -17,3 +17,5 @@ python3 scripts/form_doldur.py ornek/tr/form.md --sablon assets/stp596_bilgilend
 python3 scripts/deste_kur.py ornek/tr/sunum.md --sablon assets/sunum_format_16x9.pptx --cikti /tmp/ornek_sunum.pptx
 python3 scripts/kontrol.py /tmp/ornek_form.docx /tmp/ornek_sunum.pptx
 ```
+
+*English:* these files show the **input format** of the scripts; names and institutions are anonymised and the advisor is fictional. Do not copy them into your own submission. `en/form.md` and `en/sunum.md` are the English examples.

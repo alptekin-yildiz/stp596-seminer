@@ -1,10 +1,12 @@
 # stp596-seminer
 
+🇹🇷 Türkçe · [🇬🇧 English](README.en.md)
+
 ![Beta](https://img.shields.io/badge/s%C3%BCr%C3%BCm-v0.1.0--beta-orange) ![Lisans: MIT](https://img.shields.io/badge/lisans-MIT-blue)
 
 İTÜ Havacılık Enstitüsü **STP 596 Bilimsel Araştırma, Etik ve Seminer** dersinde seminer **bilgilendirme formunu** ve **40 dakikalık seminer sunumunu** bir yapay zekâ ajanıyla hazırlamak için bir **ajan becerisi** (agent skill). Ajan önce sizinle görüşür, sonra formu ve sunumu dersin şablonlarıyla kurar. İçerik sizin; ajan düzenler, biçime sokar, kuralları denetler.
 
-> **About (English).** A personal, beta-stage agent skill for preparing the seminar information form and the 40-minute seminar presentation of the STP 596 course at the ITU Aviation Institute. It is not official course material and its use is optional; the interview runs in your language and the outputs can be produced in Turkish or English. Every output of an AI tool must be verified by the student, who remains solely responsible for content, sources and course requirements. Code and documentation are under the MIT License without warranty; the templates and the ITU logo in `assets/` are excluded from the licence and may be used only within the course. See [Disclaimer](#sorumluluk-reddi-ve-kullanım-koşulları).
+> **English readers:** the full English version, including the disclaimer, is in [README.en.md](README.en.md).
 
 > ⚠️ **Lütfen önce okuyun.** Bu beceri **beta** sürümdür, dersin resmî materyali değildir ve kullanımı **zorunlu değildir**. Ajanın yazdığı her cümleyi, her kaynağı ve her görseli teslimden önce siz doğrularsınız; sorumluluk sizindir. Ayrıntı: [Sorumluluk reddi ve kullanım koşulları](#sorumluluk-reddi-ve-kullanım-koşulları).
 
@@ -103,6 +105,8 @@ Yapay zekâ araçlarının ürettiği her metin, kaynak ve görsel teslimden ön
 Üçüncü taraf yapay zekâ hizmetleri kendi kullanım koşulları, gizlilik politikaları ve ücretleriyle çalışır; hangi hizmetin kullanılacağı ve hangi verinin yükleneceği öğrencinin kararıdır. Gizli, sözleşmeli ya da yayımlanmamış tez verisini bu hizmetlere yüklemeden önce danışmanınıza danışın.
 
 Yazılım ve belgeler MIT lisansıyla, "olduğu gibi" ve açık ya da örtük hiçbir garanti olmaksızın sunulur; kullanımından doğan hiçbir zarardan hazırlayan sorumlu tutulamaz (bkz. [LICENSE](LICENSE)). `assets/` altındaki şablonlar ve İTÜ logosu MIT kapsamı dışındadır; yalnız STP 596 dersi kapsamında kullanılır, başka amaçla kullanılamaz ve dağıtılamaz.
+
+İngilizce çeviri ([README.en.md](README.en.md)) kolaylık içindir; fark hâlinde bu Türkçe metin geçerlidir.
 
 ## Lisans, hazırlayan, yapay zekâ beyanı
 
