@@ -1,0 +1,123 @@
+{
+  "ogrenci": {
+    "ad": "Ad SOYAD",
+    "no": "514xxxxxx",
+    "program": "Savunma Teknolojileri Yüksek Lisans Programı",
+    "kurum": "İTÜ Havacılık Enstitüsü",
+    "sehir": "İstanbul, Türkiye",
+    "eposta_veya_orcid": "ad.soyad@itu.edu.tr"
+  },
+  "danisman": "Doç. Dr. Ayşe Kaya [kurgusal]",
+  "seminer_tarihi": "2026-12-02",
+  "form_son_tarih": "2026-11-27",
+  "konu_turu": "tez",
+  "tez": {
+    "baslik": "Genetik Algoritma Optimizasyonu ile Helikopter Rotor Konsept Tasarımı",
+    "soru": "Pal elemanı momentum teorisine (BEMT) dayalı bir askı performans modeli ile genetik algoritmayı birleştirerek, verilen görev gereksinimleri için helikopter ana rotorunun konsept tasarım değişkenlerini (yarıçap, veter, pal sayısı, uç hızı, burulma) askı gücü ve rotor kütlesi açısından en iyileyen bir yöntem geliştirmek.",
+    "asama": "oneri_yontem",
+    "onem": "Konsept aşamasında rotor boyutlandırma deneyime ve elle iterasyona dayanır; bir değişken değişince bütün hesap yinelenir. Literatürde GA ile rotor optimizasyonu var, ancak hızlı bir BEMT modeliyle az değişkenli bir GA döngüsünü konsept aşamasında kuran açık çalışma sınırlıdır (öğrencinin taraması; danışmanla doğrulanacak). Kullanıcı: helikopter üreticilerinin konsept tasarım ekipleri.",
+    "savunma_havacilik_iliskisi": "Yerli döner kanatlı platform programlarında (ör. Gökbey) ana rotor konsept boyutlandırması; görev gereksinimine (azami ağırlık → itki ihtiyacı) göre tasarım uzayının sistematik taranması ve konsept döngüsünün kısalması. Süre kazancı ölçülmedi, sayı verilmeyecek. Gizlilik nedeniyle gerçek proje verisi kullanılmayacak; doğrulama açık literatürdeki Westland Lynx rotoruyla.",
+    "yontem": "Sayısal benzetim tabanlı optimizasyon (planlanan). (1) Beş tasarım değişkeni ve aralıkları literatürden: yarıçap 5,5–7,0 m; veter 0,25–0,45 m; pal sayısı 2–5; uç hızı 190–220 m/s; burulma −6…−14°; pal profili sabit NACA 0012. (2) BEMT askı performans modeli Python'da yazıldı ve çalışıyor; ileri uçuş modeli henüz yok. (3) GA hazır kütüphaneyle (DEAP ya da pymoo; karar verilmedi) modele bağlanacak. Amaç fonksiyonu: askı gücü, rotor kütlesi ile birlikte ağırlıklı tek fonksiyon ya da çok hedefli olarak değerlendirilecek; biçimi danışmanla belirlenecek. Kısıtlar: uç hızı aralığı üzerinden dolaylı uç Mach sınırı; pal yüklemesine üst sınır (tutunma kaybı, planlanıyor); görev ağırlığından gelen itki ihtiyacı; gürültü modellenmiyor. (4) Doğrulama: Lynx rotoru (Novak vd.) ile karşılaştırma.",
+    "bulgular": "Sayısal sonuç yok. Askı modeli deneme amaçlı çalıştırıldı; değer doğrulanmadı, sunulmayacak.",
+    "sinirliliklar": "BEMT'in ileri uçuşta ve yüksek yüklemede sınırlı doğruluğu; dinamik tutunma kaybı, sıkıştırılabilirlik ve pal elastikliği modellenmiyor; ileri uçuş modeli henüz yok (en büyük eksik); GA rastlantısal, küresel en iyiyi garanti etmez; deneysel doğrulama verisi yok, yalnız literatür rotoruyla karşılaştırma; yapısal/aeroelastik analiz kapsam dışı.",
+    "yayinlar": []
+  },
+  "seminer": {
+    "baslik": "Helikopter rotor konsept tasarımı için genetik algoritma: problem tanımı ve yöntem planı",
+    "kapsam": "Problemin tanımı; tasarım değişkenleri ve aralıkları; literatürün yöntem ve bulgularının toplu özeti (klasik konsept boyutlandırma, Lynx konsept çalışması, GA'nın işleyişi ve mühendislik tasarımında kullanımı); BEMT–GA iş akışı planı, amaç fonksiyonu ve kısıtlar, doğrulama stratejisi, şu anki durum ve takvim. Anlatılmayacak: sayısal sonuçlar (yok), ileri uçuş modeli (yazılmadı).",
+    "tezle_iliski": "problem_tanimi",
+    "dusen_basliklar": [
+      "Bulgular",
+      "Tartışma"
+    ],
+    "slayt_butcesi": {
+      "Giriş": 3,
+      "Literatür Taraması": 5,
+      "Araştırma Yöntemi": 7,
+      "Sonuçlar": 1
+    },
+    "animasyon": true,
+    "animasyon_yerleri": [
+      "GA döngüsü adım adım (Literatür)",
+      "BEMT–GA iş akışı kutuları sırayla (Yöntem)"
+    ]
+  },
+  "kaynaklar": [
+    {
+      "ieee": "S. Katoch, S. S. Chauhan ve V. Kumar, \"A review on genetic algorithm: past, present, and future,\" Multimedia Tools and Applications, c. 80, sayı 5, s. 8091–8126, 2021, doi: 10.1007/s11042-020-10139-6.",
+      "dogrulandi": true
+    },
+    {
+      "ieee": "J. G. Leishman, Principles of Helicopter Aerodynamics, 2. bas. Cambridge, U.K.: Cambridge Univ. Press, 2006.",
+      "dogrulandi": true,
+      "not": "öğrenci baskıyı doğruladı"
+    },
+    {
+      "ieee": "W. Johnson, Rotorcraft Aeromechanics. Cambridge, U.K.: Cambridge Univ. Press, 2013, doi: 10.1017/CBO9781139235655.",
+      "dogrulandi": true
+    },
+    {
+      "ieee": "D. Novak, T. Bucak ve A. Domitrović, \"Helicopter main rotor conceptual design: application to a Westland Lynx helicopter,\" Promet – Traffic & Transportation, c. [DOĞRULANACAK], s. [DOĞRULANACAK], 2008.",
+      "dogrulandi": false,
+      "not": "cilt, sayı, sayfa öğrenciden gelecek; Crossref'te bulunamadı"
+    },
+    {
+      "ieee": "[DOĞRULANACAK: AHS Forum bildirisi, 2011]",
+      "dogrulandi": false,
+      "not": "Bohorquez/Samuel 2003 JAHS adayı öğrenci tarafından reddedildi (mikro hava aracı); danışmana sorulacak"
+    }
+  ],
+  "gorseller": [
+    {
+      "slayt": "Literatür Taraması",
+      "aciklama": "Tasarım değişkenleri ve aralıkları (yeniden çizim)",
+      "dosya": "gorseller/tasarim_degiskenleri.png",
+      "kaynak": "Aralıklar Leishman 2006, Johnson 2013 ve Novak vd. 2008'den derlenerek yazar tarafından belirlendi; çizim Claude ile yenilendi"
+    },
+    {
+      "slayt": "Literatür Taraması",
+      "aciklama": "GA döngüsü şeması: popülasyon → uygunluk → seçilim → çaprazlama → mutasyon → yeni nesil",
+      "dosya": "gorseller/ga_dongusu.png",
+      "kaynak": "Katoch vd. 2021'e göre, Claude çizimi (öğrenci gözden geçirecek)"
+    },
+    {
+      "slayt": "Araştırma Yöntemi",
+      "aciklama": "BEMT–GA iş akışı kutu-ok şeması",
+      "dosya": "gorseller/is_akisi.png",
+      "kaynak": "öğrencinin tarifiyle Claude çizimi (öğrenci gözden geçirecek)"
+    },
+    {
+      "slayt": "Araştırma Yöntemi",
+      "aciklama": "BEMT pal elemanı kesiti ve hız üçgeni (Leishman'daki gibi)",
+      "dosya": "gorseller/bemt_kesit.png",
+      "kaynak": "Leishman 2006'ya göre Claude çizimi (öğrenci gözden geçirecek)"
+    }
+  ],
+  "yz": {
+    "arac": "Claude (Anthropic); kodda hata ayıklama için ara sıra ChatGPT (OpenAI)",
+    "yapilanlar": [
+      "soru-cevap görüşmesiyle içeriğin yapılandırılması",
+      "metinlerin dil ve biçim düzenlemesi",
+      "kaynak künyelerinin IEEE biçimine getirilmesi ve Crossref ile doğrulanması",
+      "form ve sunum şablonlarının doldurulması",
+      "tasarım değişkenleri grafiğinin yeniden çizimi",
+      "GA döngüsü, BEMT–GA iş akışı ve pal elemanı şemalarının çizimi",
+      "kodda hata ayıklama desteği (ChatGPT)"
+    ],
+    "yapilmayanlar": [
+      "içerik üretimi",
+      "tez kodunun yazımı",
+      "veri analizi",
+      "kaynak seçimi",
+      "yorum ve değerlendirme"
+    ]
+  },
+  "anahtar_kelimeler": [
+    "genetik algoritma",
+    "rotor konsept tasarımı",
+    "pal elemanı momentum teorisi",
+    "askı performansı",
+    "helikopter",
+    "tasarım optimizasyonu"
+  ]
+}
