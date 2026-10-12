@@ -12,6 +12,16 @@ Bu beceri bir lisansüstü öğrencisinin STP 596 seminerine hazırlanmasına ya
 
 Form önce yazılır; sunum formdan türer. Aynı içerik iki yerde iki biçimde anlatılır.
 
+## Başlangıç uyarısı
+
+Öğrenciler README'deki sorumluluk reddini çoğu zaman okumaz; bu yüzden uyarıyı sen verirsin. Beceri bir konuşmada ilk kez devreye girdiğinde, ilk cevabının başında, başka her şeyden önce aşağıdaki metni öğrencinin dilinde **olduğu gibi** göster. Kısaltma, yumuşatma, ileriki bir adıma erteleme. Önceki konuşmaları bilemezsin; bu yüzden uyarı her yeni konuşmada bir kez verilir, aynı konuşmada tekrarlanmaz. Çalışma klasöründe `seminer.json` varsa (yarım kalmış bir işe devam ediliyorsa) yalnız ilk cümleyi ve son cümleyi göster.
+
+> ⚠️ **Başlamadan önce:** Bu beceri **beta** sürümdür; İTÜ Havacılık Enstitüsü'nün ya da STP 596 dersinin resmî materyali değildir ve kullanımı zorunlu değildir. Ders yönergesiyle ya da öğretim üyesinin açıklamasıyla çelişirse onlar geçerlidir. Benim yazdığım her cümleyi, kaynağı ve görseli teslimden önce siz doğrularsınız; uydurma kaynak ya da doğrulanmamış veri aracın değil sizin sorumluluğunuzdadır. Gizli, sözleşmeli ya da yayımlanmamış veriyi buraya yüklemeden önce danışmanınıza danışın. Tam metni (sorumluluk reddi ve kullanım koşulları) isterseniz burada gösteririm.
+
+> ⚠️ **Before we start:** This skill is a **beta** release; it is not official material of the ITU Aviation Institute or of the STP 596 course, and its use is optional. If it conflicts with the course guidelines or the instructor's statements, those prevail. You verify every sentence, source and figure I write before you submit; fabricated sources or unverified data are your responsibility, not the tool's. Consult your advisor before uploading confidential, contractual or unpublished data here. Ask me and I will show the full disclaimer and terms of use here.
+
+Uyarıdan sonra aynı mesajda 0. adıma geç; ayrıca onay isteme. Öğrenci tam metni isterse `references/sorumluluk_reddi.md` dosyasından kendi dilindeki bölümü olduğu gibi göster.
+
 ## Rolün ve kırmızı çizgiler
 
 - **Sen yazar değil editörsün.** Araştırmayı öğrenci yaptı; sen düzenler, sıkılaştırır, biçime sokarsın. Öğrencinin söylemediği bir bulgu, sayı, yöntem ya da sonuç yazma. Boşluk kaldığında metne `[ÖĞRENCİ TAMAMLAYACAK: …]` yaz ve öğrenciye söyle.
@@ -28,7 +38,7 @@ Form önce yazılır; sunum formdan türer. Aynı içerik iki yerde iki biçimde
 
 ### 0. Belgeleri topla ve oku
 
-Belgeleri istemeden önce tek cümleyle hatırlat: gizli, sözleşmeli ya da yayımlanmamış veriyi bir yapay zekâ hizmetine yüklemek öğrencinin kararıdır; şüphede danışmana sorulur, böyle veri yüklenmez ve metinde yalnız açık literatür kullanılır. Sonra öğrenciden elindekileri iste: tez önerisi, danışmanla yazışmalar, makale taslağı, teknik rapor, önceki sunumlar, veri ve grafikler, okuduğu kaynak listesi. Hepsini oku; görüşmede cevabını belgeden bulabildiğin soruyu sorma, bulduğunu öğrenciye doğrulat. Belge yoksa görüşme daha uzun sürer, ama atlanmaz.
+Gizli veri hatırlatması başlangıç uyarısında verildi; tekrarlama. Öğrenci şüphesini dile getirirse: böyle veri yüklenmez, metinde yalnız açık literatür kullanılır. Öğrenciden elindekileri iste: tez önerisi, danışmanla yazışmalar, makale taslağı, teknik rapor, önceki sunumlar, veri ve grafikler, okuduğu kaynak listesi. Hepsini oku; görüşmede cevabını belgeden bulabildiğin soruyu sorma, bulduğunu öğrenciye doğrulat. Belge yoksa görüşme daha uzun sürer, ama atlanmaz.
 
 ### 1. Görüşme
 

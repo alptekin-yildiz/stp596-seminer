@@ -37,7 +37,7 @@ Open a new Project; make the content of `SKILL.md` the project instructions; upl
 
 ## How it works
 
-1. **Documents:** you give the agent your thesis proposal, reports, charts and reading list; the agent reads them and does not ask what it already knows. Ask your advisor before uploading confidential or contractual data.
+1. **Documents:** the agent first shows a short notice (beta, not official, verification and responsibility are yours, ask your advisor about confidential data), once in every new conversation. Then you give the agent your thesis proposal, reports, charts and reading list; the agent reads them and does not ask what it already knows.
 2. **Interview:** 3 rounds, at most 23 questions; each question comes with the agent's suggested answer, so you can just say "yes". On weak answers ("no limitations", an unmeasured number, an unverified source) the agent insists. The topic is your thesis; if there is no thesis yet, that is questioned first.
 3. **Plan:** form sections and a slide-by-slide claim–evidence plan; at most 4 multi-option questions (headings, figures, slide patterns, indefensible points).
 4. **Form:** the agent shows the text and produces the `.docx` with your approval. Minimums apply: at least 850 words of text and 5 references.

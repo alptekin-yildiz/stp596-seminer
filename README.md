@@ -39,7 +39,7 @@ Yeni bir Proje açın; `SKILL.md` içeriğini proje yönergesi yapın; `referenc
 
 ## Nasıl çalışır
 
-1. **Belgeler:** tez önerinizi, raporlarınızı, grafiklerinizi, kaynak listenizi ajana verirsiniz; ajan okur, bildiğini sormaz. Gizli ya da sözleşmeli veriyi yüklemeden önce danışmanınıza danışın.
+1. **Belgeler:** ajan önce kısa bir uyarı gösterir (beta, resmî değil, doğrulama ve sorumluluk sizde, gizli veri için danışmanınıza danışın); her yeni konuşmada bir kez. Sonra tez önerinizi, raporlarınızı, grafiklerinizi, kaynak listenizi ajana verirsiniz; ajan okur, bildiğini sormaz.
 2. **Görüşme:** 3 tur, en çok 23 soru; her soruda ajanın önerili cevabı vardır, "evet" deyip geçebilirsiniz. Zayıf cevaplarda ("sınırlılık yok", ölçülmemiş sayı, doğrulanmamış kaynak) ajan ısrar eder. Konu tezinizdir; tez yoksa önce bu sorgulanır.
 3. **Plan:** form bölümleri ve slayt slayt iddia–kanıt planı; en çok 4 çoklu-öneri sorusu (başlıklar, görseller, kalıplar, savunulamayacak noktalar).
 4. **Form:** metni gösterir, onayınızla `.docx` üretir. Alt sınırlar var: metin ≥ 850 sözcük, ≥ 5 kaynak.
