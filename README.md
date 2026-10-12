@@ -2,7 +2,7 @@
 
 🇹🇷 Türkçe · [🇬🇧 English](README.en.md)
 
-![Beta](https://img.shields.io/badge/s%C3%BCr%C3%BCm-v0.1.0--beta-orange) ![Lisans: MIT](https://img.shields.io/badge/lisans-MIT-blue)
+![Beta](https://img.shields.io/badge/s%C3%BCr%C3%BCm-v0.1.1--beta-orange) ![Lisans: MIT](https://img.shields.io/badge/lisans-MIT-blue)
 
 İTÜ Havacılık Enstitüsü **STP 596 Bilimsel Araştırma, Etik ve Seminer** dersinde seminer **bilgilendirme formunu** ve **40 dakikalık seminer sunumunu** bir yapay zekâ ajanıyla hazırlamak için bir **ajan becerisi** (agent skill). Ajan önce sizinle görüşür, sonra formu ve sunumu dersin şablonlarıyla kurar. İçerik sizin; ajan düzenler, biçime sokar, kuralları denetler.
 
