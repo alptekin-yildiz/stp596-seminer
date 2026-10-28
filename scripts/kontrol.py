@@ -103,7 +103,8 @@ def check_docx(path):
     if abstract and not (120 <= n <= 280): out.append(f"Özet {n} sözcük; hedef 150–250.")
     for st, t in paras:
         if st != "references" and t:
-            for h in math_hits(t): out.append(f"Elle yazılmış matematik, Word denklemine çevirin ({h})")
+            # yer tutucunun içindeki LaTeX zaten "işaret kaldı" ile bildirilir
+            for h in math_hits(MARK.sub("", t)): out.append(f"Elle yazılmış matematik, Word denklemine çevirin ({h})")
     refs = [t for st, t in paras if st == "references" and t]
     if len(refs) < 5: out.append(f"{len(refs)} referans; en az 5 beklenir.")
     hakemli = sum(1 for r in refs if re.search(r"\bc\.\s*\d|vol\.|doi:|Proc\.|Conf\.|Konferans|Sempozyum|Forum|J\.|Journal|Dergi|Transactions|Letters", r))
@@ -226,7 +227,7 @@ def check_pptx(path):
             for m in MARK.finditer(t): out.append(f"Slayt {idx}: işaret kaldı: {m.group(0)[:50]}")
             if not has_k(title, K_KAYNAK) and sh.name not in ("altbilgi", "sayfa_no"):
                 for line in t.split("\n"):
-                    for h in math_hits(line): out.append(f"Slayt {idx} ({title[:30]}): elle yazılmış matematik, denklem aracıyla yazın ({h})")
+                    for h in math_hits(MARK.sub("", line)): out.append(f"Slayt {idx} ({title[:30]}): elle yazılmış matematik, denklem aracıyla yazın ({h})")
             if sh.name in ("baslik", "altbilgi", "sayfa_no", "tesekkur_satirlar", "kapak_kunye", "tablo_not") or sh.name.startswith(("altyazi", "sayi", "gorsel", "zaman", "mesaj", "kapak_", "kapanis_")) or sh.name.endswith(("_no", "_baslik")) or has_k(title, K_KAYNAK): continue
             sh_bullets = 0
             for p in sh.text_frame.paragraphs:
@@ -264,7 +265,8 @@ def check_pptx(path):
     for idx, (s, t) in enumerate(zip(slides, titles), 1):
         if idx == 1 or has_k(t, K_YARDIMCI): continue
         content_n += 1
-        if not any(has_pic(sh) for sh in s.shapes): text_only += 1
+        has_eq = s._element.find(".//{http://schemas.microsoft.com/office/drawing/2010/main}m") is not None   # PowerPoint denklemi
+        if not has_eq and not any(has_pic(sh) for sh in s.shapes): text_only += 1
     if content_n and text_only / content_n > 0.34:
         out.append(f"{content_n} içerik slaydının {text_only} tanesi salt madde listesi (üst sınır üçte bir); tablo, süreç, karşılaştırma, kart ya da görsel kalıbına çevirin.")
     icerik = [t for t in titles[1:] if not has_k(t, K_YARDIMCI)]

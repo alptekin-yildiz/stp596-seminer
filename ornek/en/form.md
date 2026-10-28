@@ -30,6 +30,12 @@ The second part summarises the operation of the genetic algorithm (population, f
 
 The third and longest part is the method plan: the BEMT–genetic algorithm workflow, the assumptions of the hover performance model, the encoding of design variables as a chromosome, candidate objective functions and constraints (an indirect tip Mach limit through the tip speed range, an upper bound on blade loading, the thrust demand from the mission weight), algorithm settings and library choice, the validation strategy with the Lynx rotor, and the current state and timeline. Since no numerical results exist yet, the seminar ends with a "next steps" slide instead of a results section.
 
+The hover performance model rests on momentum theory, which links hover thrust to the induced velocity through (1) [2]:
+
+$$T = 2 \rho A v_i^2$$
+
+where T is the thrust, ρ the air density, A the rotor disc area and vᵢ the induced velocity. Blade element theory computes the same thrust section by section; combining the two gives the hover power of the model.
+
 ## Seminar–Thesis Relation
 The seminar covers the "problem definition and method plan" part of the thesis; the literature survey, the construction of the design-variable space and the writing of the hover performance model carried out in the first semester fall within this scope. Because the thesis has no numerical results yet, no findings are presented; the single value from the trial run of the hover model is not shown because it has not been validated. The forward-flight model, the comparison with the reference design and the discussion of results belong to later semesters and are outside the seminar.
 

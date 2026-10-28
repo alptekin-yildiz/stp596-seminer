@@ -30,6 +30,12 @@ Seminerde önce problem tanımlanacaktır: helikopter ana rotorunun konsept tasa
 
 Üçüncü ve en uzun bölüm yöntem planıdır: BEMT–genetik algoritma iş akışı, askı performans modelinin varsayımları, tasarım değişkenlerinin kromozom olarak kodlanması, amaç fonksiyonu adayları ve kısıtlar (uç hızı aralığı üzerinden dolaylı uç Mach sınırı, pal yüklemesine üst sınır, görev ağırlığından gelen itki ihtiyacı), genetik algoritma ayarları ve kütüphane seçimi, Lynx rotoruyla doğrulama stratejisi ile çalışmanın bugünkü durumu ve takvimi anlatılacaktır. Sınırlılıklar (ileri uçuş modelinin bulunmaması, BEMT'in yüksek yüklemedeki sınırları, dinamik tutunma kaybı ve pal elastikliğinin modellenmemesi, genetik algoritmanın küresel en iyiyi garanti etmemesi, deneysel verinin olmaması) yazar tarafından açıkça belirtilecektir. Sunum, dinleyenin götüreceği üç noktayı özetleyen tek bir sonuç slaydıyla bitecektir.
 
+Askı performans modelinin temeli momentum teorisidir; askı itkisi (1) ile indüklenmiş hıza bağlanır [2]:
+
+$$T = 2 \rho A v_i^2$$
+
+burada T itki, ρ hava yoğunluğu, A rotor disk alanı, vᵢ indüklenmiş hızdır. Pal elemanı teorisi aynı itkiyi kesit kesit hesaplar; iki yaklaşımın birleşimi modelin askı gücünü verir.
+
 ## Seminer – Tez İlişkisi
 Seminer, tezin "problemin tanımlanması ve yöntem planı" parçasını kapsamaktadır; tezin ilk döneminde yapılan literatür taraması, tasarım değişkeni uzayının kurulması ve askı performans modelinin yazılması bu kapsamın içindedir. Tezin sayısal sonuçları henüz bulunmadığından seminerde bulgu sunulmayacak; askı modelinin deneme amaçlı çalıştırılmasından elde edilen tek değer doğrulanmadığı için gösterilmeyecektir. İleri uçuş performans modeli henüz yazılmadığından kapsam dışıdır. Seminerin tez açısından beklenen katkısı, amaç fonksiyonunun biçimi ve kısıtların seçimi konusunda dinleyicilerden geri bildirim almak ve yöntemin genetik algoritmaya bağlanmadan önce dışarıdan değerlendirilmesidir.
 

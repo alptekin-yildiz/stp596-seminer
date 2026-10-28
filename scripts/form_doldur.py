@@ -12,13 +12,20 @@ Thesis to ...', '## Seminar Topic', '## Seminar–Thesis Relation', '## Acknowle
 AI Use', '## References') ve --dil en (ya da '## Abstract' görülünce otomatik). Şablonun sabit metinleri
 (etiketler, bölüm başlıkları, altbilgi) seçilen dilde yazılır.
 Şablonun stilleri ve iki sütunlu düzeni korunur; şablondaki örnek metinler silinir.
-Gerekli paket: python-docx (pip install python-docx).
+Bölüm metninde kendi paragrafındaki '$$ LaTeX $$' satırı Word denklemine çevrilir ve sağda (1), (2)… diye
+numaralanır (IEEE); pandoc yoksa yer tutucu yazılır ve uyarılır (scripts/denklem.py).
+Gerekli paket: python-docx (pip install python-docx); isteğe bağlı: pandoc.
 """
-import argparse, copy, re, sys
+import argparse, copy, os, re, sys
 from docx import Document
 from docx.text.paragraph import Paragraph
+from lxml import etree
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import denklem
 
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+EQ_RE = re.compile(r"^\$\$(.+?)\$\$$", re.S)
+EQ = {"n": 0, "orta": 2420, "sag": 4840, "uyari": []}   # denklem sayacı, sekme konumları (twip), uyarılar
 
 # ---------- form.md ayrıştırma ----------
 
@@ -62,6 +69,7 @@ def paragraphs_of(block):
     """Boş satırla ayrılmış paragraflar; tek satır kırılmaları birleştirilir."""
     if not block:
         return []
+    block = re.sub(r"(?m)^[ \t]*(\$\$.+?\$\$)[ \t]*$", r"\n\1\n", block.strip())   # denklem kendi paragrafı
     paras = [re.sub(r"\s*\n\s*", " ", p).strip() for p in re.split(r"\n\s*\n", block.strip())]
     return [p for p in paras if p]
 
@@ -136,19 +144,66 @@ def clone_after(p):
 def remove(p):
     p._p.getparent().remove(p._p)
 
+def eq_tabs(doc):
+    """İki sütunlu bölümün sütun genişliğinden denklem satırının orta ve sağ sekmesi (twip)."""
+    for sct in doc.sections:
+        cols = sct._sectPr.find(W + "cols")
+        if cols is not None and cols.get(W + "num") == "2":
+            space = int(cols.get(W + "space", "720"))
+            col = (sct.page_width.twips - sct.left_margin.twips - sct.right_margin.twips - space) // 2
+            return col // 2, col - 40
+    return EQ["orta"], EQ["sag"]
+
+def eq_paragraph(latex):
+    """IEEE denklem satırı: ortada denklem, sağda (n). Çevrilemezse (None, yer tutucu metni)."""
+    EQ["n"] += 1
+    n = EQ["n"]
+    omml = denklem.latex_to_omml(latex)
+    if omml is None:
+        neden = "pandoc bulunamadı" if not denklem.pandoc_var() else "LaTeX çevrilemedi"
+        EQ["uyari"].append(f"Denklem ({n}) Word denklemine çevrilemedi ({neden}); yer tutucu yazıldı. Word'de Ekle → Denklem ile yazın.")
+        return None, f"[ÖĞRENCİ TAMAMLAYACAK: denklem ({n}), Word'de Ekle → Denklem ile: {latex}]"
+    w = W[1:-1]
+    p = etree.fromstring(
+        f'<w:p xmlns:w="{w}"><w:pPr><w:pStyle w:val="BodyText"/><w:tabs><w:tab w:val="clear" w:pos="288"/>'
+        f'<w:tab w:val="center" w:pos="{EQ["orta"]}"/><w:tab w:val="right" w:pos="{EQ["sag"]}"/></w:tabs>'
+        f'<w:spacing w:before="60" w:after="60"/><w:ind w:left="0" w:firstLine="0"/><w:jc w:val="left"/></w:pPr>'
+        f'<w:r><w:tab/></w:r><w:r><w:tab/><w:t>({n})</w:t></w:r></w:p>')
+    p[1].addnext(copy.deepcopy(omml))          # sekme run'ından sonra denklem, sonra sekme + numara
+    return p, None
+
 def fill_block(template_paras, texts, label=""):
-    """İlk şablon paragrafını kalıp alır; texts kadar paragraf yazar, fazla şablon paragraflarını siler."""
+    """İlk şablon paragrafını kalıp alır; texts kadar paragraf yazar, fazla şablon paragraflarını siler.
+    '$$ … $$' paragrafı numaralı Word denklemi olur."""
     if not texts:
         texts = [f"[ÖĞRENCİ TAMAMLAYACAK: {label}]"]
     base = template_paras[0]
     rpr = first_rpr(base)
+    tmpl = copy.deepcopy(base._p)
     for extra in template_paras[1:]:
         remove(extra)
-    set_text(base, texts[0], rpr)
-    last = base
-    for t in texts[1:]:
-        last = clone_after(last)
-        set_text(last, t, rpr)
+    last = None
+    for i, t in enumerate(texts):
+        if i == 0:
+            p = base
+        else:
+            el = copy.deepcopy(tmpl); last._p.addnext(el); p = Paragraph(el, base._parent)
+        m = EQ_RE.match(t.strip())
+        eq, ph = eq_paragraph(m.group(1).strip()) if m else (None, None)
+        if eq is not None:
+            p._p.addnext(eq); remove(p); p = Paragraph(eq, base._parent)
+        else:
+            set_text(p, ph or t, rpr)
+            if last is not None and EQ_RE.match(texts[i - 1].strip()) and t[:1].islower():
+                # denklemden sonra küçük harfle süren cümle ("burada …", "where …") girintisiz başlar (IEEE)
+                ppr = p._p.get_or_add_pPr()
+                ind = ppr.find(W + "ind")
+                if ind is None:
+                    ind = etree.Element(W + "ind")
+                    after = [c for c in ppr if c.tag in (W + "jc", W + "rPr", W + "sectPr", W + "pPrChange")]
+                    after[0].addprevious(ind) if after else ppr.append(ind)   # şema sırası: ind, jc, rPr'den önce
+                ind.set(W + "firstLine", "0")
+        last = p
     return last
 
 def body_paras_after(doc, heading_p):
@@ -181,6 +236,7 @@ def main():
     dil = a.dil or detect_dil(sec)
     L = LABELS[dil]
     doc = Document(a.sablon)
+    EQ["orta"], EQ["sag"] = eq_tabs(doc)
     P = doc.paragraphs
     by_style = lambda name: [p for p in doc.paragraphs if p.style is not None and p.style.name == name]
     warnings = []
@@ -337,8 +393,9 @@ def main():
                     if donem: t = re.sub(r"20\d\d-20\d\d\s+\S+\s+Yarıyılı", donem, t)
                     if program: t = re.sub(r"–\s.*?Programı", "– " + program, t)
                 set_text(fp, t)
+    warnings += EQ["uyari"]
     doc.save(a.cikti)
-    print(f"Yazıldı: {a.cikti}  (dil: {dil})")
+    print(f"Yazıldı: {a.cikti}  (dil: {dil})" + (f"; {EQ['n']} denklem" if EQ["n"] else ""))
     for w in warnings:
         print("UYARI:", w)
 

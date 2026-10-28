@@ -68,7 +68,7 @@ Plan adımında her slayt için önce iddiayı, sonra kalıbı seç. Kalıp seç
 | Birkaç çarpıcı sayı | Üç sayı | `sayilar` |
 | Tek paragraf iddia (araştırma sorusu gibi) | Metin | `metin` |
 
-**Denklem içeren slayt:** ayrı tür yoktur; `metin` ya da `metin_gorsel` kalıbında denklem, altına değişkenlerin tanımı gelir. Yazım kuralları aşağıda, "Tipografi ve matematik" bölümünde; `x_1`, `x^2`, `sqrt()` türü elle yazım kullanılmaz.
+**Denklem içeren slayt:** ayrı tür yoktur; `metin` ya da `metin_gorsel` kalıbında denklem kendi satırında `$$ … $$` arasında LaTeX ile yazılır, altına değişkenlerin tanımı gelir. Betik onu düzenlenebilir PowerPoint denklemine çevirir (aşağıda "Tipografi ve matematik"); `x_1`, `x^2`, `sqrt()` türü elle yazım kullanılmaz.
 
 **Literatür ve yöntem slaytlarında taban:** her literatür slaydında en az iki kaynak numarası; her yöntem slaydında bir şema, tablo ya da süreç kalıbı.
 
@@ -82,6 +82,7 @@ Dayanak: Mayer'in çoklu ortam ilkeleri (tutarlılık, işaretleme, fazlalık): 
 - Tek seri lacivert; ikinci seri bronz, üçüncü çelik mavisi. Dört renkten fazlası yok; renk yalnız anlam taşıyorsa değişir.
 - Yazı grafiğin içinde 14 pt'den küçük görünmesin: grafiği slayt ölçüsünde (ör. 6×4 inç, 130–150 dpi) üret. Eksen adı, sayılar ve lejant bütün grafiklerde aynı puntoda.
 - **Slayt başına en çok 3 grafik**, yan yana ve her biri okunur boyutta. Görsel alanı ≈ 11,7 × 4,6 inçtir; 3×3 grafik konursa her biri ≈ 3,9 × 1,5 inçe düşer ve 14 pt yazıya yer kalmaz. Büyük çizilip küçültülen grafiğin yazısı da aynı oranda küçülür (16 pt, üçte birine küçültülünce ≈ 5 pt). Fazlası için: slaytlara böl; mesajı taşıyan bir iki grafiği seç, gerisini forma ya da yedek slayta taşı; ortak eksenli tek grafikte birleştir.
+- Etiket, sembol ve sayı hiçbir çizginin, okun ya da başka yazının üstüne binmez; açı etiketi açının içine, yayın yanına konur. Sığmıyorsa şekil büyütülür, punto küçültülmez.
 - **Grafik başına en çok 4 seri** (eğri, çubuk grubu). Fazlası için asıl seriyi renkli, öbürlerini soluk gri çiz ya da grafiği böl. Lejant yerine serinin ucuna doğrudan etiket tercih edilir.
 - Eksen sıfırdan başlar; başlamıyorsa eksen kırığı ve not. Logaritmik eksen etikette yazılır.
 - Belirsizlik gösterilir: hata çubuğu, aralık, örneklem büyüklüğü. Yoksa altyazıda "belirsizlik hesaplanmadı".
@@ -105,7 +106,10 @@ Dayanak: Mayer'in çoklu ortam ilkeleri (tutarlılık, işaretleme, fazlalık): 
 
 **Matematik yazımı.**
 - Klavye yazımı kullanılmaz: `x_1`, `V_inf`, `x^2`, `e^(-t)`, `a*b`, `sqrt(x)`, `int`, `sum`, `<=`, `>=`, `$…$`, `\alpha`. Doğrusu gerçek indis ve üs, gerçek simge: x₁, x², a·b ya da a × b, √x, ∫, Σ, ≤, ≥, α.
-- Tek satırlık basit ifade Unicode metinle yazılabilir (θ = 30°, Re ≈ 2·10⁵, vᵢ). Kesir, integral, toplam, iç içe indis ya da birden çok satır içeren denklem metin olarak yazılmaz: öğrencinin LaTeX ya da Word denklem çıktısı görsel olarak eklenir (ekran görüntüsü değil, gövde puntosuna denk boyutta). Çıktı yoksa slayta `[ÖĞRENCİ TAMAMLAYACAK: denklem (n), PowerPoint'te Ekle → Denklem ile]` yazılır ve öğrenciye denklemi kurulumdan sonra PowerPoint'in denklem aracıyla yazması söylenir.
+- Cümle içindeki tek sembol ya da basit ifade Unicode metinle yazılır (θ = 30°, Re ≈ 2·10⁵, vᵢ); cümle içinde `$…$` kullanılmaz.
+- Kendi satırında duran her denklem `$$ … $$` arasında LaTeX ile yazılır: `$$ T = 2 \rho A v_i^2 $$`. `deste_kur.py` onu **düzenlenebilir PowerPoint denklemine** çevirir (Cambria Math, gövde puntosunda, ortalı); öğrenci tıklayıp PowerPoint'in denklem aracıyla değiştirebilir. Metin ve denklemler `sunum.md`'deki sırayla alt alta dizilir; denklemli slaytta `~~~` tıklama grubu kullanılmaz. Denklem yalnız `metin` ve `metin_gorsel` türlerinde yerleşir.
+- Çeviriyi pandoc yapar (isteğe bağlı). pandoc yoksa ya da LaTeX çevrilemezse betik denklemin yerine `[ÖĞRENCİ TAMAMLAYACAK: denklem, PowerPoint'te Ekle → Denklem ile: …]` yazar ve uyarır; öğrenciye pandoc'u kurmasını ya da denklemi PowerPoint'te kendisinin yazmasını söyle. Denklemin resmini (ekran görüntüsü) koyma.
+- Denklem PowerPoint'te görünür. Keynote, Google Slaytlar ve LibreOffice denklemin yerine düz metinli yedeğini gösterir (ör. `T = 2ρAvᵢ²`); öğrenciye sunumu PowerPoint'ten yapmasını söyle. Son göz turunda görüntüye çevirdiğinde yedeği görürsün: içerik doğruluğuna oradan bak, biçimi öğrenci PowerPoint'te denetler.
 - Değişkenler italik, birimler, fonksiyon adları (sin, log, exp) ve diferansiyel d dik yazılır. Sayı ile birim arasında boşluk (10 m/s, 30 °C; açı derecesinde boşluk yok: 30°).
 - Aynı büyüklük her yerde aynı sembolle gösterilir (form ve sunum, slayt ve slayt); her sembol ilk geçtiği yerde tanımlanır.
 - Ondalık ayraç dile göre: Türkçede virgül (2,88 kg), İngilizcede nokta (2.88 kg); aynı belgede karışmaz.
@@ -237,4 +241,4 @@ Punto: betik bütün destede tek gövde puntosu kullanır; metin az olduğunda b
 
 `mesaj:` satırı her içerik slaydında bulunmalı (İçindekiler ve Kaynaklar hariç). `###` satırları blok açar; blok içindeki `-` maddeler o bloğa aittir.
 
-Kurallar: her `##` bir slayt; köşeli parantezdeki tür yukarıdaki tablodan; `-` ile başlayan satır madde, diğer satırlar paragraf; `![alt yazı](dosya)` görsel; `>` konuşma notu; `~~~` gövdeyi tıklama gruplarına böler (en çok 3). Görsel dosyası yoksa betik yerine `[ÖĞRENCİ TAMAMLAYACAK: görsel]` kutusu koyar ve uyarır. `punto: 16` satırı bir slaydın gövde puntosunu değiştirir; kullanma, metin sığmıyorsa slaydı böl.
+Kurallar: her `##` bir slayt; köşeli parantezdeki tür yukarıdaki tablodan; `-` ile başlayan satır madde, diğer satırlar paragraf; `![alt yazı](dosya)` görsel; `$$ LaTeX $$` kendi satırında denklem (`metin`, `metin_gorsel`); `>` konuşma notu; `~~~` gövdeyi tıklama gruplarına böler (en çok 3). Görsel dosyası yoksa betik yerine `[ÖĞRENCİ TAMAMLAYACAK: görsel]` kutusu koyar ve uyarır. `punto: 16` satırı bir slaydın gövde puntosunu değiştirir; kullanma, metin sığmıyorsa slaydı böl.

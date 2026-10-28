@@ -77,7 +77,9 @@ Türkçe bağlaç "ve" kullanılır. DOI varsa yazılır. Doğrulanamayan künye
 
 Formun metnine denklem gerekiyorsa IEEE düzeni uygulanır: denklem ayrı satırda, Word denklem nesnesiyle yazılır, sağda (1), (2) diye numaralanır ve metinde numarasıyla anılır ("(1)'de görüldüğü gibi"). Denklemden hemen sonra sembollerin tanımı gelir ("burada T itki, ρ hava yoğunluğudur").
 
-- `form_doldur.py` denklem nesnesi üretmez. Denklemin yerine kendi paragrafında `[ÖĞRENCİ TAMAMLAYACAK: denklem (1), Word'de Ekle → Denklem ile: …]` yaz, denklemi işaretin içinde okunur biçimde ver ve öğrenciye denklemi Word'de denklem aracıyla yazmasını söyle.
+- Denklemi `form.md`'de kendi satırında `$$ … $$` arasında LaTeX ile yaz: `$$ C_T = \frac{\sigma a}{4}\left(\frac{2}{3}\theta_0 - \lambda\right) $$`. `form_doldur.py` onu düzenlenebilir Word denklemine çevirir, sütunun ortasına koyar ve sağda (1), (2)… diye sırayla numaralar. Numaraları metinde sen anarsın ("(1)'de"); sırayı denklemlerin formdaki sırası belirler.
+- Denklemden sonra küçük harfle süren cümle ("burada …") girintisiz başlar; betik bunu yapar.
+- Çeviriyi pandoc yapar (isteğe bağlı). pandoc yoksa ya da LaTeX çevrilemezse betik denklemin yerine `[ÖĞRENCİ TAMAMLAYACAK: denklem (n), Word'de Ekle → Denklem ile: …]` yazar ve uyarır; öğrenciye pandoc'u kurmasını ya da denklemi Word'de kendisinin yazmasını söyle.
 - Metin içindeki basit sembol Unicode ile ve gerçek indisle yazılır (vᵢ, Cₗ, θ, ρ, m/s²). Klavye yazımı yok: `x_1`, `x^2`, `a*b`, `sqrt()`, `<=`, `$…$`, `\alpha`. `kontrol.py` bunları bildirir.
 - Değişkenler italik, birimler ve fonksiyon adları dik; sayı ile birim arasında boşluk (10 m/s); Türkçe formda ondalık virgül, İngilizce formda nokta.
 - Aynı büyüklük formda ve sunumda aynı sembolle gösterilir.

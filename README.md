@@ -2,7 +2,7 @@
 
 🇹🇷 Türkçe · [🇬🇧 English](README.en.md)
 
-![Beta](https://img.shields.io/badge/s%C3%BCr%C3%BCm-v0.2.0--beta-orange) ![Lisans: MIT](https://img.shields.io/badge/lisans-MIT-blue)
+![Beta](https://img.shields.io/badge/s%C3%BCr%C3%BCm-v0.2.1--beta-orange) ![Lisans: MIT](https://img.shields.io/badge/lisans-MIT-blue)
 
 İTÜ Havacılık Enstitüsü **STP 596 Bilimsel Araştırma, Etik ve Seminer** dersinde seminer **bilgilendirme formunu** ve **40 dakikalık seminer sunumunu** bir yapay zekâ ajanıyla hazırlamak için bir **ajan becerisi** (agent skill). Ajan önce sizinle görüşür, sonra formu ve sunumu dersin şablonlarıyla kurar. İçerik sizin; ajan düzenler, biçime sokar, kuralları denetler.
 
@@ -21,7 +21,7 @@
 
 ## Kurulum
 
-Gereken: Python 3.9+ ve `pip install python-docx python-pptx` (ajan betikleri çalıştırır; yalnız sohbet ortamında betik olmadan da çalışır, bkz. aşağıda).
+Gereken: Python 3.9+ ve `pip install python-docx python-pptx` (ajan betikleri çalıştırır; yalnız sohbet ortamında betik olmadan da çalışır, bkz. aşağıda). İsteğe bağlı: [pandoc](https://pandoc.org) (macOS: `brew install pandoc`); varsa denklemler formda ve sunumda düzenlenebilir Word/PowerPoint denklemi olarak yazılır, yoksa yerlerine yer tutucu konur ve denklemi siz yazarsınız.
 
 **Claude Code (terminal, masaüstü uygulaması ya da VS Code eklentisi)**
 1. Sağ üstte **Code → Download ZIP** ile indirin, klasörü `~/.claude/skills/stp596-seminer/` olarak çıkarın (proje içinde `.claude/skills/stp596-seminer/` de olur). Alternatif: `git clone https://github.com/alptekin-yildiz/stp596-seminer ~/.claude/skills/stp596-seminer`

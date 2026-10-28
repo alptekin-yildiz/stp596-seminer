@@ -4,8 +4,8 @@
 
 ## Nasıl
 
-- Sunumu görüntüye çevirebiliyorsan (LibreOffice: `soffice --headless --convert-to pdf sunum.pptx`) sayfaları görüntü olarak tek tek incele; şekil içi yazıyı ancak böyle görürsün. Çeviremiyorsan metinleri oku, şekil ve grafik maddelerini (3, 4, 5, 6, 7, 8) öğrenciyle birlikte geç ve bunu açıkça söyle.
-- Formu da aynı gözle oku; denklem işaretleri (`[ÖĞRENCİ TAMAMLAYACAK: denklem …]`) ve sembol tanımları dahil.
+- Sunumu görüntüye çevirebiliyorsan (LibreOffice: `soffice --headless --convert-to pdf sunum.pptx`) sayfaları görüntü olarak tek tek incele; şekil içi yazıyı ancak böyle görürsün. Çeviremiyorsan metinleri oku, şekil ve grafik maddelerini (3–9) öğrenciyle birlikte geç ve bunu açıkça söyle.
+- Formu da aynı gözle oku; denklemler, kalan denklem yer tutucuları (`[ÖĞRENCİ TAMAMLAYACAK: denklem …]`) ve sembol tanımları dahil. Sunumdaki denklemleri görüntüde düz metinli yedekleriyle görürsün; içeriğe oradan bak, biçimi öğrenci PowerPoint'te denetler.
 - Bulguları öğrenciye slayt ya da bölüm numarasıyla tek listede ver. Düzeltmeyi onayla yap; onay soruları en çok 5, gerisi rapor satırı. Öğrencinin görselindeki sorunu sen düzeltemezsin: söyle, yeniden üretmesini iste.
 - Sorunsuz geçen maddeyi tek satırla bildir ("Punto: tutarlı"); turu atlama.
 
@@ -22,13 +22,14 @@
 6. Hiçbir slaytta 3'ten çok grafik yok; tek resimde ızgara hâlinde birleştirilmiş grafikler de sayılır (2×3, 3×3).
 7. Hiçbir grafikte 4'ten çok seri yok; fazlaysa asıl seri öne çıkarılmış, öbürleri soluk.
 8. Grafiklerin eksen adı, sayıları ve lejantı aynı puntoda ve slaytta okunur; `kontrol.py`'nin "küçültülmüş görsel" uyarısı çözüldü ya da bilinçli bırakıldı.
+9. Şekil ve grafiklerde hiçbir etiket, sembol ya da sayı bir çizginin, okun, eğrinin ya da başka bir yazının üstüne binmiyor; açı etiketi açının içinde, yayın yanında. Görüntüyü büyütüp bak; küçük boyutta gözden kaçar.
 
-Bu üç madde okunabilirlik önerisidir: aşan yeri nedeni ve bir öneriyle bildir; öğrenci bırakmak isterse bırak, `plan.md`'ye not düş, `sorunlar.md`'ye `uyari` satırı yaz.
+6–8. maddeler okunabilirlik önerisidir: aşan yeri nedeni ve bir öneriyle bildir; öğrenci bırakmak isterse bırak, `plan.md`'ye not düş, `sorunlar.md`'ye `uyari` satırı yaz.
 
 **Matematik**
-9. Metinde `x_1`, `x^2`, `*`, `sqrt()`, `int`, `sum`, `<=`, `$…$`, `\alpha` gibi elle yazım kalmadı (şekillerin ve tabloların içi dahil).
-10. Değişkenler italik; birimler, fonksiyon adları (sin, log, exp) ve diferansiyel d dik; sayı ile birim arasında boşluk var (10 m/s).
-11. Alt ve üst indisler gerçek indis; kesir, kök, integral ve toplam işaretleri gerçek simge. Karmaşık denklem denklem nesnesi ya da öğrencinin çıktısından görsel; görselse puntosu gövdeye denk.
-12. Aynı büyüklük her yerde aynı sembolle gösteriliyor (formda ve sunumda, slayttan slayta); her sembol ilk geçtiği yerde tanımlanmış.
-13. Formdaki denklemler Word denklem nesnesi, sağda (1), (2) diye numaralı ve metinde bu numarayla anılıyor; yer tutucu kaldıysa öğrenciye hatırlatıldı.
-14. Ondalık ayraç dile uygun (Türkçede virgül, İngilizcede nokta) ve aynı belgede karışmıyor; şekillerin eksen etiketleri dahil.
+10. Metinde `x_1`, `x^2`, `*`, `sqrt()`, `int`, `sum`, `<=`, `$…$`, `\alpha` gibi elle yazım kalmadı (şekillerin ve tabloların içi dahil).
+11. Değişkenler italik; birimler, fonksiyon adları (sin, log, exp) ve diferansiyel d dik; sayı ile birim arasında boşluk var (10 m/s).
+12. Alt ve üst indisler gerçek indis; kesir, kök, integral ve toplam işaretleri gerçek simge. Kendi satırındaki her denklem düzenlenebilir denklem nesnesi (`$$ … $$` ile üretildi ya da öğrenci denklem aracıyla yazdı); denklem resmi yok.
+13. Aynı büyüklük her yerde aynı sembolle gösteriliyor (formda ve sunumda, slayttan slayta); her sembol ilk geçtiği yerde tanımlanmış.
+14. Formdaki denklemler Word denklem nesnesi, sağda (1), (2) diye numaralı ve metinde bu numarayla anılıyor; yer tutucu kaldıysa öğrenciye hatırlatıldı.
+15. Ondalık ayraç dile uygun (Türkçede virgül, İngilizcede nokta) ve aynı belgede karışmıyor; şekillerin eksen etiketleri dahil.

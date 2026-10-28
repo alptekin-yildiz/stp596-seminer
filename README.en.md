@@ -2,7 +2,7 @@
 
 [🇹🇷 Türkçe](README.md) · 🇬🇧 English
 
-![Beta](https://img.shields.io/badge/version-v0.2.0--beta-orange) ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
+![Beta](https://img.shields.io/badge/version-v0.2.1--beta-orange) ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
 
 An **agent skill** for preparing the seminar **information form** and the **40-minute seminar presentation** of the course **STP 596 Scientific Research, Ethics and Seminar** at the ITU Aviation Institute with an AI agent. The agent first interviews you, then builds the form and the slides from the course templates. The content is yours; the agent edits, formats and checks the rules.
 
@@ -19,7 +19,7 @@ Both declare the use of AI; the agent writes the declaration from your answers.
 
 ## Installation
 
-Required: Python 3.9+ and `pip install python-docx python-pptx` (the agent runs the scripts; in a chat-only environment it works without them, see below).
+Required: Python 3.9+ and `pip install python-docx python-pptx` (the agent runs the scripts; in a chat-only environment it works without them, see below). Optional: [pandoc](https://pandoc.org) (macOS: `brew install pandoc`); if present, equations are written into the form and slides as editable Word/PowerPoint equations, otherwise a placeholder is left and you type the equation yourself.
 
 **Claude Code (terminal, desktop app or VS Code extension)**
 1. Use **Code → Download ZIP** at the top right and extract the folder as `~/.claude/skills/stp596-seminer/` (or `.claude/skills/stp596-seminer/` inside a project). Alternative: `git clone https://github.com/alptekin-yildiz/stp596-seminer ~/.claude/skills/stp596-seminer`

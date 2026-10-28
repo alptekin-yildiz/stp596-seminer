@@ -11,6 +11,8 @@ gorsel, metin_gorsel, uc_gorsel, sayilar, tablo, karsilastirma, kartlar, surec, 
 '### Alt başlık' satırları karsilastirma/kartlar/surec türlerinde blok açar.
 Gövdede '-' madde, düz satır paragraf, '![alt yazı](dosya)' görsel, '>' konuşma notu, '~~~' tıklama grubu
 ayracı, 'punto: 16' gövde puntosu, 'animasyon: evet' görsel/sayı slaytlarında tıklamayla açılma.
+'$$ LaTeX $$' satırı (metin ve metin_gorsel türlerinde) gövde puntosunda, düzenlenebilir PowerPoint denklemi olur;
+pandoc yoksa yer tutucu yazılır ve uyarılır (scripts/denklem.py).
 '~~~' ya da 'animasyon: evet' kullanıldıysa çıktının yanına anim.json yazılır; scripts/anim.py ile uygulanır.
 Punto deste genelinde tektir: betik önce her metin alanına sığan en büyük puntoyu ölçer, sonra aynı roldeki
 bütün alanları (başlık, gövde, süreç kutusu, tablo) bu ölçülerin en küçüğüyle yazar; slayttan slayta punto değişmez.
@@ -23,6 +25,8 @@ from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.oxml.ns import qn
 from lxml import etree
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import denklem
 
 NAVY = RGBColor(0x02, 0x27, 0x56)
 GREY = RGBColor(0x6E, 0x6E, 0x6E)
@@ -66,7 +70,7 @@ def parse_md(path):
         h = re.match(r"^##\s+(?:\[(\w+)\]\s*)?(.*)$", line)
         if h:
             cur = {"tur": (h.group(1) or "").lower(), "baslik": h.group(2).strip(), "paralar": [[]], "gorseller": [],
-                   "notlar": [], "punto": None, "animasyon": False, "mesaj": "", "bloklar": []}
+                   "notlar": [], "punto": None, "animasyon": False, "mesaj": "", "bloklar": [], "denklemler": []}
             slides.append(cur)
             continue
         if cur is None or not line.strip() and False:
@@ -81,6 +85,10 @@ def parse_md(path):
         mm = re.match(r"^mesaj:\s*(.+)$", s.strip(), re.I)
         if mm:
             cur["mesaj"] = mm.group(1).strip(); continue
+        eq = re.match(r"^\$\$(.+?)\$\$\s*$", s.strip())
+        if eq:                                  # akıştaki yeri korunur: ("denklem", sıra no)
+            cur["denklemler"].append(eq.group(1).strip())
+            cur["paralar"][-1].append(("denklem", str(len(cur["denklemler"]) - 1))); continue
         img = re.match(r"^!\[(.*?)\]\((.*?)\)\s*$", s.strip())
         if img:
             cur["gorseller"].append({"alt": img.group(1).strip(), "dosya": img.group(2).strip()}); continue
@@ -116,7 +124,19 @@ def parse_md(path):
             else: sl["tur"] = "metin"
         if sl["tur"] not in TEMPLATE_INDEX or sl["tur"] == "kapak":
             warn(f"Bilinmeyen tür '{sl['tur']}' ({sl['baslik']}); 'metin' kullanıldı."); sl["tur"] = "metin"
+        if sl["denklemler"] and sl["tur"] not in ("metin", "metin_gorsel"):
+            warn(f"'{sl['baslik']}': denklem yalnız metin ve metin_gorsel slaytlarında yerleştirilir; bu slayttakiler yok sayıldı.")
+            sl["denklemler"] = []
+        if sl["denklemler"] and len([g for g in sl["paralar"] if g]) > 1:
+            warn(f"'{sl['baslik']}': denklemli slaytta '~~~' tıklama grupları desteklenmez; gruplar birleştirildi.")
+            sl["paralar"] = [[it for g in sl["paralar"] for it in g]]
+        if not sl["denklemler"]:
+            sl["paralar"] = [[it for it in g if it[0] != "denklem"] for g in sl["paralar"]]
     return meta, slides
+
+def text_groups(groups):
+    """Denklem işaretleri çıkarılmış metin grupları (punto ve sığma hesabı için)."""
+    return [[it for it in g if it[0] != "denklem"] for g in groups]
 
 # ---------------- pptx yardımcıları ----------------
 
@@ -388,6 +408,67 @@ def check_overflow(items, size, w, h, label):
     if lines > cap:
         warn(f"'{label}': metin kutuya sığmayabilir (~{lines:.0f} satır, kapasite ~{cap:.0f}). Slaydı bölün; puntoyu küçültmeyin.")
 
+def eq_reserve(sl, size=24):
+    """Denklemlerin gövdede kaplayacağı yükseklik (inç)."""
+    return sum(denklem.eq_height(x, size) for x in sl["denklemler"])
+
+def add_equation(slide, sl, latex, i, x, y, w, size):
+    """Bir denklemi (x, y)'den başlayan, w genişliğinde ortalı kutuya gövde puntosunda yerleştirir; yüksekliği döner.
+    PowerPoint denklemi (a14:m) olur; PowerPoint dışındaki programlar için düz metinli yedek eklenir.
+    Çevrilemeyen denklemin yerine yer tutucu yazılır."""
+    h = denklem.eq_height(latex, size)
+    omml = denklem.latex_to_omml(latex)
+    if omml is None:
+        neden = "pandoc bulunamadı" if not denklem.pandoc_var() else "LaTeX çevrilemedi"
+        warn(f"'{sl['baslik']}': denklem PowerPoint denklemine çevrilemedi ({neden}); yer tutucu yazıldı. PowerPoint'te Ekle → Denklem ile yazın.")
+        add_textbox(slide, x, y, w, h, [("paragraf", f"[ÖĞRENCİ TAMAMLAYACAK: denklem, PowerPoint'te Ekle → Denklem ile: {latex}]")],
+                    size=size, align=PP_ALIGN.CENTER, name=f"denklem{i}")
+        return h
+    tree = slide.shapes._spTree
+    ids = [int(e.get("id")) for e in tree.iter() if e.tag.endswith("}cNvPr") and e.get("id", "").isdigit()]
+    nid = max(ids + [1]) + 1
+    P_, A_, M_ = qn("p:sp").split("}")[0][1:], qn("a:p").split("}")[0][1:], denklem.M
+    MC = "http://schemas.openxmlformats.org/markup-compatibility/2006"
+    A14 = "http://schemas.microsoft.com/office/drawing/2010/main"
+    def sp(body):
+        return (f'<p:sp xmlns:p="{P_}" xmlns:a="{A_}"><p:nvSpPr><p:cNvPr id="{nid}" name="denklem{i}"/><p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr>'
+                f'<p:spPr><a:xfrm><a:off x="{int(Inches(x))}" y="{int(Inches(y))}"/><a:ext cx="{int(Inches(w))}" cy="{int(Inches(h))}"/></a:xfrm>'
+                f'<a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/></p:spPr>'
+                f'<p:txBody><a:bodyPr wrap="square" rtlCol="0" anchor="ctr"/><a:lstStyle/><a:p><a:pPr algn="ctr"/>{body}</a:p></p:txBody></p:sp>')
+    lin = denklem.linear_text(omml).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    ac = etree.fromstring(
+        f'<mc:AlternateContent xmlns:mc="{MC}"><mc:Choice xmlns:a14="{A14}" Requires="a14">'
+        + sp(f'<a14:m><m:oMathPara xmlns:m="{M_}"><m:oMathParaPr><m:jc m:val="centerGroup"/></m:oMathParaPr></m:oMathPara></a14:m>')
+        + '</mc:Choice><mc:Fallback>'
+        + sp(f'<a:r><a:rPr lang="tr-TR" sz="{int(size * 100)}"><a:solidFill><a:srgbClr val="022756"/></a:solidFill><a:latin typeface="{FONT}"/></a:rPr><a:t>{lin}</a:t></a:r>')
+        + '</mc:Fallback></mc:AlternateContent>')
+    ac.find(f".//{{{M_}}}oMathPara").append(denklem.for_pptx(omml, size))
+    tree.append(ac)
+    return h
+
+def body_with_equations(slide, sl, groups, x, y, w, h, size):
+    """Gövdeyi yazar; denklemli slaytta metin ve denklemler sunum.md'deki sırayla alt alta dizilir."""
+    if not sl["denklemler"]:
+        fill_body_groups(slide, groups, x, y, w, h, size); return
+    items = [it for g in groups for it in g]
+    cy, chunk, n_txt, n_eq = y, [], 0, 0
+    def flush():
+        nonlocal cy, chunk, n_txt
+        if chunk:
+            th = estimate_lines(chunk, size, w) * size * 1.3 / 72 + 0.15
+            n_txt += 1
+            add_textbox(slide, x, cy, w, th, chunk, size=size, name="govde" if n_txt == 1 else f"govde_{n_txt}")
+            cy += th; chunk = []
+    for kind, val in items:
+        if kind == "denklem":
+            flush(); n_eq += 1
+            cy += add_equation(slide, sl, sl["denklemler"][int(val)], n_eq, x, cy, w, size)
+        else:
+            chunk.append((kind, val))
+    flush()
+    if cy - y > h + 0.05:
+        warn(f"'{sl['baslik']}': denklemler ve metin gövdeye sığmıyor; slaydı bölün.")
+
 # ---------------- slayt kurucular ----------------
 
 def build_kapak(slide, meta):
@@ -421,13 +502,13 @@ def build_kapak(slide, meta):
 def build_metin(slide, sl, meta, size=None):
     groups = sl["paralar"]
     x, y, w, h = BODY_X, body_top(sl), BODY_W, BODY_BOTTOM - body_top(sl)
-    size = sl["punto"] or size or deck_size("govde", auto_size(groups, w, h), sl["baslik"])
+    size = sl["punto"] or size or deck_size("govde", auto_size(text_groups(groups), w, h - eq_reserve(sl)), sl["baslik"])
     if sl["punto"]:
         check_overflow([it for g in groups for it in g], size, w, h, sl["baslik"])
     # şablonun Lorem kutusunu kaldırıp yeniden kur (grup bölme ve konum için)
     lor = find_shape(slide, lambda s: text_of(s).startswith("Lorem"))
     if lor: remove_shape(lor)
-    fill_body_groups(slide, groups, x, y, w, h, size)
+    body_with_equations(slide, sl, groups, x, y, w, h, size)
 
 def build_icindekiler(slide, sl, meta):
     items = [(k, t) for g in sl["paralar"] for (k, t) in g]
@@ -455,10 +536,10 @@ def build_metin_gorsel(slide, sl, meta, base_dir):
         if sh.name.startswith("Dikdörtgen") or text_of(sh).strip().lower() == "görsel alan" or text_of(sh).startswith("Lorem"):
             remove_shape(sh)
     x, y, w, h = BODY_X, body_top(sl), 5.3, BODY_BOTTOM - body_top(sl)
-    size = sl["punto"] or deck_size("govde", auto_size(sl["paralar"], w, h), sl["baslik"])
+    size = sl["punto"] or deck_size("govde", auto_size(text_groups(sl["paralar"]), w, h - eq_reserve(sl)), sl["baslik"])
     if sl["punto"]:
         check_overflow([it for g in sl["paralar"] for it in g], size, w, h, sl["baslik"])
-    fill_body_groups(slide, sl["paralar"], x, y, w, h, size)
+    body_with_equations(slide, sl, sl["paralar"], x, y, w, h, size)
     place_layered_images(slide, sl, 6.5, y, 6.1, h, base_dir)
 
 def build_uc_gorsel(slide, sl, meta, base_dir):
@@ -704,12 +785,12 @@ def build_deck(sablon, meta, slides, base_dir, dil, footer):
         for g in (sl["paralar"] if tur not in ("zaman", "tablo") else []) + [b["items"] for b in sl["bloklar"]]:
             if sum(1 for k, _ in g if k == "madde") > 5:
                 warn(f"'{sl['baslik']}': 5'ten çok madde; slaydı bölün.")
-        if tur == "metin" and not sl["gorseller"]:
+        if tur == "metin" and not sl["gorseller"] and not sl["denklemler"]:
             metin_yalniz.append(sl["baslik"])
         # animasyon
         groups = [g for g in sl["paralar"] if g]
         katman = sl.get("_katman", 1)
-        if len(groups) > 1 and tur in ("metin", "metin_gorsel"):
+        if len(groups) > 1 and tur in ("metin", "metin_gorsel") and not sl["denklemler"]:
             steps = []
             for i in range(2, len(groups) + 1):
                 step = [{"name": f"govde{i}"}]

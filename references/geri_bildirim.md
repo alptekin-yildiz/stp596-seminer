@@ -26,7 +26,7 @@ Her satır bir olay: `adım · tür · ne oldu · ne yapıldı`. Türler:
 ```markdown
 # stp596-seminer geri bildirim
 
-Tarih: GG.AA.YYYY · Beceri sürümü: v0.2.0-beta (SKILL.md'deki ya da README'deki sürüm)
+Tarih: GG.AA.YYYY · Beceri sürümü: v0.2.1-beta (SKILL.md'deki ya da README'deki sürüm)
 Ortam: [Claude Code / claude.ai / ChatGPT / Codex] · Model: [ad] · Betikler çalıştı mı: [evet / kısmen / hayır]
 Dil: [tr / en] · Konu türü: [tez / tez konusu + literatür / bitirme-proje] · Tez aşaması: [a–e]
 

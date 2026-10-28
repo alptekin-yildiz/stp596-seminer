@@ -109,10 +109,10 @@ mesaj: Her aday rotor için BEMT modeli askı gücü ve kütleyi hesaplar; GA bu
 
 ## [metin_gorsel] 5 · Yöntem: BEMT askı modeli
 mesaj: Askı modeli Python'da çalışıyor; ileri uçuş henüz yok.
-- Pal elemanı teorisi: her kesitte dL, dD; momentum teorisi: indüklenmiş hız vᵢ [2]
-- Çıktı: askı itkisi ve askı gücü; rotor kütlesi için basit bir kestirim ilişkisi kullanılması planlanıyor
-- Varsayımlar: NACA 0012 sabit profil, doğrusal burulma, sıkıştırılamaz akış
-- Python'da yazıldı; askı gücü hesabı çalışıyor, ileri uçuş yok
+- Momentum teorisi: askı itkisi indüklenmiş hızdan [2]
+$$T = 2 \rho A v_i^2$$
+- Pal elemanı teorisi: her kesitte dL, dD; çıktı askı itkisi ve gücü
+- Varsayımlar: NACA 0012 sabit profil, doğrusal burulma, sıkıştırılamaz akış; ileri uçuş yok
 ![Şekil 4. Pal elemanı kesiti ve hız üçgeni. Leishman [2] temel alınarak nitel olarak çizildi.](gorseller/bemt_kesit.png)
 > Şekli anlatırken hız üçgeninden hücum açısına, oradan dL ve dD'ye git. Varsayımları kendin say; "neden NACA 0012" sorusuna hazır ol (yaygın, verisi açık, konsept aşamasında yeterli). Kütle kestirim ilişkisinin henüz seçilmediğini açıkça söyle. Geçiş: "Modelin girdisi kromozom."
 

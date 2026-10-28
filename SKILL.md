@@ -111,7 +111,7 @@ Literatür sunumu yapılıyorsa (tez olgunlaşmamışsa) kaynakların yöntem ve
 
 ## Araçlar
 
-Betikler yalnız Python ister: `python-docx`, `python-pptx` (ikisi de `pip install python-docx python-pptx`). Node gerekmez. Her betik `--help` ile kullanımını yazar. Betiği çalıştıramadığın ortamda (yalnız sohbet) aynı işi elle yap: formu bölüm bölüm metin olarak ver, sunumu slayt slayt "başlık / mesaj / görsel / konuşma notu" biçiminde ver; öğrenci şablona kendisi aktarır.
+Betikler yalnız Python ister: `python-docx`, `python-pptx` (ikisi de `pip install python-docx python-pptx`). Node gerekmez. İsteğe bağlı: **pandoc**; varsa `$$ … $$` denklemleri formda ve sunumda düzenlenebilir denklem nesnesine çevrilir, yoksa yer tutucu yazılır (`references/sunum.md`, "Tipografi ve matematik"). Denklem yazacaksan ve pandoc yoksa öğrenciye kurulumunu öner (macOS: `brew install pandoc`; Windows: pandoc.org yükleyicisi). Her betik `--help` ile kullanımını yazar. Betiği çalıştıramadığın ortamda (yalnız sohbet) aynı işi elle yap: formu bölüm bölüm metin olarak ver, sunumu slayt slayt "başlık / mesaj / görsel / konuşma notu" biçiminde ver; öğrenci şablona kendisi aktarır.
 
 ## Son kontrol listesi (öğrenciyle birlikte)
 
