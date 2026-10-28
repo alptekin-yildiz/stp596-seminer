@@ -73,6 +73,15 @@ IEEE biçimi, metinde geçiş sırasına göre numaralı. En az üç, genelde be
 
 Türkçe bağlaç "ve" kullanılır. DOI varsa yazılır. Doğrulanamayan künyeye `[DOĞRULANACAK]` eklenir; betik bunu çıktıya taşır.
 
+## Denklem ve sembol
+
+Formun metnine denklem gerekiyorsa IEEE düzeni uygulanır: denklem ayrı satırda, Word denklem nesnesiyle yazılır, sağda (1), (2) diye numaralanır ve metinde numarasıyla anılır ("(1)'de görüldüğü gibi"). Denklemden hemen sonra sembollerin tanımı gelir ("burada T itki, ρ hava yoğunluğudur").
+
+- `form_doldur.py` denklem nesnesi üretmez. Denklemin yerine kendi paragrafında `[ÖĞRENCİ TAMAMLAYACAK: denklem (1), Word'de Ekle → Denklem ile: …]` yaz, denklemi işaretin içinde okunur biçimde ver ve öğrenciye denklemi Word'de denklem aracıyla yazmasını söyle.
+- Metin içindeki basit sembol Unicode ile ve gerçek indisle yazılır (vᵢ, Cₗ, θ, ρ, m/s²). Klavye yazımı yok: `x_1`, `x^2`, `a*b`, `sqrt()`, `<=`, `$…$`, `\alpha`. `kontrol.py` bunları bildirir.
+- Değişkenler italik, birimler ve fonksiyon adları dik; sayı ile birim arasında boşluk (10 m/s); Türkçe formda ondalık virgül, İngilizce formda nokta.
+- Aynı büyüklük formda ve sunumda aynı sembolle gösterilir.
+
 ## Sık hatalar (arşivden)
 
 - 2.2'nin 1.1'den kopyalanması.
@@ -80,6 +89,7 @@ Türkçe bağlaç "ve" kullanılır. DOI varsa yazılır. Doğrulanamayan künye
 - Özetin "bu çalışmada … anlatılacaktır" ile başlayıp hiçbir sonuç söylememesi.
 - 1.2'de genel sektör cümleleri; somut platform ve fayda yok.
 - Şablondaki Lorem ipsum parçalarının çıktıda kalması (betik yakalar).
+- Denklemin klavyeyle yazılması (`v_i`, `x^2`, `int`); Word denklem nesnesi yerine düz metin.
 
 ## form.md biçimi (betiğin okuduğu dosya)
 

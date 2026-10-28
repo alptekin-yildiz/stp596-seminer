@@ -12,6 +12,8 @@ gorsel, metin_gorsel, uc_gorsel, sayilar, tablo, karsilastirma, kartlar, surec, 
 Gövdede '-' madde, düz satır paragraf, '![alt yazı](dosya)' görsel, '>' konuşma notu, '~~~' tıklama grubu
 ayracı, 'punto: 16' gövde puntosu, 'animasyon: evet' görsel/sayı slaytlarında tıklamayla açılma.
 '~~~' ya da 'animasyon: evet' kullanıldıysa çıktının yanına anim.json yazılır; scripts/anim.py ile uygulanır.
+Punto deste genelinde tektir: betik önce her metin alanına sığan en büyük puntoyu ölçer, sonra aynı roldeki
+bütün alanları (başlık, gövde, süreç kutusu, tablo) bu ölçülerin en küçüğüyle yazar; slayttan slayta punto değişmez.
 Gerekli paket: python-pptx (pip install python-pptx). Görsel boyutu için Pillow varsa kullanılır.
 """
 import argparse, copy, json, os, re, sys
@@ -34,9 +36,18 @@ LIGHT = RGBColor(0xF2, 0xF4, 0xF8)
 LINE = RGBColor(0xBF, 0xC5, 0xCE)
 BODY_X, BODY_W, BODY_BOTTOM = 0.84, 11.65, 6.72
 WARN = []
+DECK = {}   # rol -> deste genelindeki punto; boşsa ölçüm turundayız
+FITS = {}   # ölçüm turu: rol -> [(alana sığan punto, slayt başlığı)]
 
 def warn(msg):
     WARN.append(msg)
+
+def deck_size(role, fit, label=""):
+    """Ölçüm turunda alana sığan puntoyu kaydeder; kurulum turunda rolün deste genelindeki puntosunu verir."""
+    if role in DECK:
+        return DECK[role]
+    FITS.setdefault(role, []).append((fit, label))
+    return fit
 
 # ---------------- sunum.md ----------------
 
@@ -300,7 +311,7 @@ def set_title(slide, title):
     if tb is None:
         return
     n = len(title)
-    size = 28 if n <= 30 else 24 if n <= 37 else 20 if n <= 45 else 18
+    size = deck_size("baslik", 28 if n <= 30 else 24 if n <= 37 else 20 if n <= 45 else 18, title)
     if n > 52:
         warn(f"Başlık çok uzun ({n} karakter), en çok 45 olmalı: {title[:40]}…")
     tb.left, tb.width = Inches(6.75), Inches(6.3)
@@ -350,7 +361,7 @@ def fill_body_groups(slide, groups, x, y, w, h, size):
         warn("Tıklama grupları gövde alanını aşıyor; slaydı bölün.")
 
 def auto_size(groups, w, h, base=18, max_size=24):
-    """Metin kısa ise puntoyu büyütür: kapasiteye sığan en büyük punto (24, 22, 20, 18)."""
+    """Alana sığan en büyük punto (24, 22, 20, 18); deck_size ile deste genelinde en küçüğü kullanılır."""
     groups = [g for g in groups if g]
     if not groups:
         return base
@@ -399,7 +410,7 @@ def build_kapak(slide, meta):
 def build_metin(slide, sl, meta, size=None):
     groups = sl["paralar"]
     x, y, w, h = BODY_X, body_top(sl), BODY_W, BODY_BOTTOM - body_top(sl)
-    size = sl["punto"] or size or auto_size(groups, w, h)
+    size = sl["punto"] or size or deck_size("govde", auto_size(groups, w, h), sl["baslik"])
     if sl["punto"]:
         check_overflow([it for g in groups for it in g], size, w, h, sl["baslik"])
     # şablonun Lorem kutusunu kaldırıp yeniden kur (grup bölme ve konum için)
@@ -433,7 +444,7 @@ def build_metin_gorsel(slide, sl, meta, base_dir):
         if sh.name.startswith("Dikdörtgen") or text_of(sh).strip().lower() == "görsel alan" or text_of(sh).startswith("Lorem"):
             remove_shape(sh)
     x, y, w, h = BODY_X, body_top(sl), 5.3, BODY_BOTTOM - body_top(sl)
-    size = sl["punto"] or auto_size(sl["paralar"], w, h)
+    size = sl["punto"] or deck_size("govde", auto_size(sl["paralar"], w, h), sl["baslik"])
     if sl["punto"]:
         check_overflow([it for g in sl["paralar"] for it in g], size, w, h, sl["baslik"])
     fill_body_groups(slide, sl["paralar"], x, y, w, h, size)
@@ -488,7 +499,7 @@ def build_tablo(slide, sl, meta):
     ncol = max(len(r) for r in rows)
     rows = [r + [""] * (ncol - len(r)) for r in rows]
     y = body_top(sl); avail = BODY_BOTTOM - y - (0.7 if notes else 0)
-    size = sl["punto"] or (18 if len(rows) <= 6 else 16 if len(rows) <= 9 else 14)
+    size = sl["punto"] or deck_size("tablo", 18 if len(rows) <= 6 else 16 if len(rows) <= 9 else 14, sl["baslik"])
     if len(rows) > 12: warn(f"'{sl['baslik']}': {len(rows)} satır; tabloyu bölün.")
     rh = min(0.6, avail / len(rows))
     gf = slide.shapes.add_table(len(rows), ncol, Inches(BODY_X), Inches(y), Inches(BODY_W), Inches(rh * len(rows)))
@@ -535,7 +546,7 @@ def build_karsilastirma(slide, sl, meta):
         shape_text(head, [("paragraf", b["baslik"])], 18, color=RGBColor(0xFF, 0xFF, 0xFF), align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, bold_first=True)
         body = add_box(slide, x, y + 0.55, w, h - 0.55, fill=RGBColor(0xFF, 0xFF, 0xFF), line=LINE, name=f"karsi{i+1}")
         items = b["items"] or [("paragraf", "[ÖĞRENCİ TAMAMLAYACAK]")]
-        size = sl["punto"] or auto_size([items], w - 0.3, h - 0.9, max_size=22)
+        size = sl["punto"] or deck_size("govde", auto_size([items], w - 0.3, h - 0.9, max_size=22), sl["baslik"])
         shape_text(body, items, size, align=PP_ALIGN.LEFT, margin=0.15)
         body.text_frame.margin_top = Inches(0.15)
 
@@ -557,7 +568,7 @@ def build_kartlar(slide, sl, meta):
         shape_text(head, [("paragraf", b["baslik"])], hs, color=RGBColor(0xFF, 0xFF, 0xFF), align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, bold_first=True)
         body = add_box(slide, x, y + 0.5, w, h - 0.5, fill=RGBColor(0xFF, 0xFF, 0xFF), line=LINE, name=f"kart{i+1}")
         items = b["items"] or [("paragraf", "[ÖĞRENCİ TAMAMLAYACAK]")]
-        size = sl["punto"] or auto_size([items], w - 0.3, h - 0.9, max_size=20)
+        size = sl["punto"] or deck_size("govde", auto_size([items], w - 0.3, h - 0.9, max_size=20), sl["baslik"])
         shape_text(body, items, size, align=PP_ALIGN.LEFT, margin=0.15); body.text_frame.margin_top = Inches(0.12)
     rest = [t for g in sl["paralar"] for (_, t) in g]
     if rest:
@@ -579,7 +590,7 @@ def build_surec(slide, sl, meta):
         x = BODY_X + i * (w + gap)
         box = add_box(slide, x, y0, w, h, fill=RGBColor(0xFF, 0xFF, 0xFF), line=NAVY, name=f"adim{i+1}", rounded=True)
         items = ([("paragraf", st["baslik"])] if st["baslik"] else []) + [("paragraf", t) if k == "madde" and st["baslik"] == "" else (k, t) for k, t in st["items"]]
-        size = sl["punto"] or auto_size([items], w - 0.3, h - 0.6, base=16, max_size=20)
+        size = sl["punto"] or deck_size("adim", auto_size([items], w - 0.3, h - 0.6, base=16, max_size=20), sl["baslik"])
         shape_text(box, items, size, align=PP_ALIGN.CENTER if not st["baslik"] else PP_ALIGN.LEFT, anchor=MSO_ANCHOR.MIDDLE, bold_first=bool(st["baslik"]), margin=0.14)
         box.text_frame.margin_top = Inches(0.35)
         num = slide.shapes.add_shape(9, Inches(x + w / 2 - 0.26), Inches(y0 - 0.3), Inches(0.52), Inches(0.52))  # oval, kutunun üstünde
@@ -642,49 +653,12 @@ def build_tesekkur(slide, sl, meta):
 
 # ---------------- ana ----------------
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("sunum_md")
-    ap.add_argument("--sablon", required=True)
-    ap.add_argument("--cikti", required=True)
-    a = ap.parse_args()
-    base_dir = os.path.dirname(os.path.abspath(a.sunum_md))
-
-    meta, slides = parse_md(a.sunum_md)
-    for k in ("baslik", "hazirlayan", "tarih"):
-        if k not in meta: warn(f"Ön bilgide '{k}' yok.")
-    prs = Presentation(a.sablon)
+def build_deck(sablon, meta, slides, base_dir, dil, footer):
+    """Desteyi kurar; (prs, anim, salt metin slaytları) döner. DECK boşsa yalnız punto ölçümü için çalışır."""
+    prs = Presentation(sablon)
     T = list(prs.slides)
     if len(T) < 7:
         sys.exit("Şablonda 7 örnek slayt bekleniyordu.")
-    dil = meta.get("dil", "tr").strip().lower()
-    if dil not in ("tr", "en"): warn(f"Ön bilgide 'dil: {dil}' tanınmadı; tr kabul edildi."); dil = "tr"
-    name = meta.get("hazirlayan", "")
-    footer = " · ".join(v for v in (name, meta.get("eposta", "")) if v)   # altbilgi: ad + iletişim
-    if not meta.get("eposta"): warn("Ön bilgide 'eposta' yok; altbilgide iletişim bilgisi olmalı.")
-
-    # kaynaklar bölme
-    expanded = []
-    for sl in slides:
-        if sl["tur"] == "kaynaklar":
-            refs = [t for g in sl["paralar"] for (_, t) in g]
-            chunks = [refs[i:i + 7] for i in range(0, max(1, len(refs)), 7)] or [[]]
-            for ci, ch in enumerate(chunks):
-                s2 = dict(sl); s2["_chunk"] = ch
-                if ci > 0: s2["baslik"] = sl["baslik"] + (" (cont.)" if dil == "en" else " (devam)")
-                expanded.append(s2)
-        else:
-            expanded.append(sl)
-    slides = expanded
-    has_tesekkur = any(s["tur"] == "tesekkur" for s in slides)
-    has_kaynak = any(s["tur"] == "kaynaklar" for s in slides)
-    if not has_tesekkur: warn("Teşekkürler slaydı yok; dersin kuralı gereği zorunlu.")
-    if not has_kaynak: warn("Kaynaklar slaydı yok; dersin kuralı gereği zorunlu.")
-    if not any(s["tur"] == "icindekiler" for s in slides): warn("İçindekiler slaydı yok.")
-    icerik = [s for s in slides if s["tur"] not in ("icindekiler", "kaynaklar", "tesekkur")]
-    if not (15 <= len(icerik) <= 20):
-        warn(f"İçerik slaydı sayısı {len(icerik)}; 30 dakika için 15–20 önerilir.")
-
     total = len(slides) + 1
     anim = {}; metin_yalniz = []
     # kapak
@@ -758,10 +732,69 @@ def main():
                 sh.width = Inches(6.0); sh.left = cx - sh.width // 2
                 sh.text_frame.word_wrap = False
                 sh.text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+    return prs, anim, metin_yalniz
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("sunum_md")
+    ap.add_argument("--sablon", required=True)
+    ap.add_argument("--cikti", required=True)
+    a = ap.parse_args()
+    base_dir = os.path.dirname(os.path.abspath(a.sunum_md))
+
+    meta, slides = parse_md(a.sunum_md)
+    for k in ("baslik", "hazirlayan", "tarih"):
+        if k not in meta: warn(f"Ön bilgide '{k}' yok.")
+    dil = meta.get("dil", "tr").strip().lower()
+    if dil not in ("tr", "en"): warn(f"Ön bilgide 'dil: {dil}' tanınmadı; tr kabul edildi."); dil = "tr"
+    name = meta.get("hazirlayan", "")
+    footer = " · ".join(v for v in (name, meta.get("eposta", "")) if v)   # altbilgi: ad + iletişim
+    if not meta.get("eposta"): warn("Ön bilgide 'eposta' yok; altbilgide iletişim bilgisi olmalı.")
+
+    # kaynaklar bölme
+    expanded = []
+    for sl in slides:
+        if sl["tur"] == "kaynaklar":
+            refs = [t for g in sl["paralar"] for (_, t) in g]
+            chunks = [refs[i:i + 7] for i in range(0, max(1, len(refs)), 7)] or [[]]
+            for ci, ch in enumerate(chunks):
+                s2 = dict(sl); s2["_chunk"] = ch
+                if ci > 0: s2["baslik"] = sl["baslik"] + (" (cont.)" if dil == "en" else " (devam)")
+                expanded.append(s2)
+        else:
+            expanded.append(sl)
+    slides = expanded
+    has_tesekkur = any(s["tur"] == "tesekkur" for s in slides)
+    has_kaynak = any(s["tur"] == "kaynaklar" for s in slides)
+    if not has_tesekkur: warn("Teşekkürler slaydı yok; dersin kuralı gereği zorunlu.")
+    if not has_kaynak: warn("Kaynaklar slaydı yok; dersin kuralı gereği zorunlu.")
+    if not any(s["tur"] == "icindekiler" for s in slides): warn("İçindekiler slaydı yok.")
+    icerik = [s for s in slides if s["tur"] not in ("icindekiler", "kaynaklar", "tesekkur")]
+    if not (15 <= len(icerik) <= 20):
+        warn(f"İçerik slaydı sayısı {len(icerik)}; 30 dakika için 15–20 önerilir.")
+
+    total = len(slides) + 1
+    # 1. tur: her metin alanına sığan puntoyu ölç; 2. tur: her rolü destedeki en küçük ölçüyle kur
+    n_warn = len(WARN)
+    build_deck(a.sablon, meta, slides, base_dir, dil, footer)
+    del WARN[n_warn:]
+    belirleyen = {}
+    for role, fits in FITS.items():
+        DECK[role], belirleyen[role] = min(fits)
+    if DECK.get("baslik", 28) < 28:
+        warn(f"Bütün slayt başlıkları {DECK['baslik']} punto oldu; bunu en uzun başlık belirledi: '{belirleyen['baslik'][:50]}'. Kısaltırsanız bütün başlıklar büyür.")
+    for sl in slides:
+        if sl["punto"]:
+            warn(f"'{sl['baslik']}': 'punto: {sl['punto']}' bu slaydı destenin geri kalanından farklı puntoya çekiyor; tutarlılık için kaldırın ya da slaydı bölün.")
+    prs, anim, metin_yalniz = build_deck(a.sablon, meta, slides, base_dir, dil, footer)
     if icerik and len(metin_yalniz) > len(icerik) / 3:
         warn(f"{len(icerik)} içerik slaydının {len(metin_yalniz)} tanesi salt madde listesi (üst sınır üçte bir). Tablo, süreç, karşılaştırma, kart ya da görsel kalıbına çevirin: " + "; ".join(metin_yalniz[:6]))
     prs.save(a.cikti)
     print(f"Yazıldı: {a.cikti}  ({total} slayt; {len(icerik)} içerik slaydı)")
+    ad = {"baslik": "başlık", "govde": "gövde", "adim": "süreç kutusu", "tablo": "tablo"}
+    print("Punto (deste geneli): " + ", ".join(f"{ad[r]} {DECK[r]}" for r in ad if r in DECK))
+    if DECK.get("govde", 24) < 24:
+        print(f"  Gövde puntosunu en dolu slayt belirledi: '{belirleyen['govde'][:50]}'; sadeleştirilirse bütün gövde büyüyebilir.")
     if anim:
         ap_path = os.path.join(os.path.dirname(os.path.abspath(a.cikti)), "anim.json")
         json.dump(anim, open(ap_path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)

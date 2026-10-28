@@ -109,7 +109,7 @@ mesaj: Her aday rotor için BEMT modeli askı gücü ve kütleyi hesaplar; GA bu
 
 ## [metin_gorsel] 5 · Yöntem: BEMT askı modeli
 mesaj: Askı modeli Python'da çalışıyor; ileri uçuş henüz yok.
-- Pal elemanı teorisi: her kesitte dL, dD; momentum teorisi: indüklenmiş hız v_i [2]
+- Pal elemanı teorisi: her kesitte dL, dD; momentum teorisi: indüklenmiş hız vᵢ [2]
 - Çıktı: askı itkisi ve askı gücü; rotor kütlesi için basit bir kestirim ilişkisi kullanılması planlanıyor
 - Varsayımlar: NACA 0012 sabit profil, doğrusal burulma, sıkıştırılamaz akış
 - Python'da yazıldı; askı gücü hesabı çalışıyor, ileri uçuş yok

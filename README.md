@@ -44,7 +44,7 @@ Yeni bir Proje açın; `SKILL.md` içeriğini proje yönergesi yapın; `referenc
 3. **Plan:** form bölümleri ve slayt slayt iddia–kanıt planı; en çok 4 çoklu-öneri sorusu (başlıklar, görseller, kalıplar, savunulamayacak noktalar).
 4. **Form:** metni gösterir, onayınızla `.docx` üretir. Alt sınırlar var: metin ≥ 850 sözcük, ≥ 5 kaynak.
 5. **Sunum:** slayt metinleri, kalıplar (tablo, süreç, karşılaştırma, kart, zaman çizelgesi), isteğe bağlı tıklama animasyonu; onayınızla `.pptx` üretir.
-6. **Kontrol ve teslim notu:** `kontrol.py` dersin kurallarını makineyle denetler; ajan kalan maddeleri sizinle geçer.
+6. **Kontrol ve teslim notu:** `kontrol.py` dersin kurallarını makineyle denetler (punto tutarlılığı ve klavyeyle yazılmış matematik dahil); ajan sonra biten form ve sunumun üzerinden punto, şekil içi yazı ve denklem yazımı gözüyle bir tur daha geçer, kalan maddeleri sizinle geçer. Sunum boyunca punto tektir: başlıklar bir punto, gövde bir punto.
 
 Ajan kaynak uydurmaz, bulgu eklemez; kendi eklediği standart alan bilgisini işaretler ve sahiplenmediğinizi siler. Boşluklar `[ÖĞRENCİ TAMAMLAYACAK]` ile kalır; bunlar silinmeden teslim edilmez.
 
@@ -82,7 +82,7 @@ Bu tablo ders yönergesinin özetidir; çelişki hâlinde ders yönergesi ve ö�
 ```
 stp596-seminer/
 ├── SKILL.md              ajanın okuduğu ana yönerge (Agent Skills biçimi)
-├── references/           görüşme ağacı, form ve sunum kuralları, animasyon, yapay zekâ beyanı, geri bildirim raporu
+├── references/           görüşme ağacı, form ve sunum kuralları, son göz turu, animasyon, yapay zekâ beyanı, geri bildirim raporu
 ├── assets/               stp596_bilgilendirme_form.docx, sunum_format_16x9.pptx
 ├── scripts/              form_doldur.py, deste_kur.py, anim.py, kontrol.py (yalnız Python)
 └── ornek/                anonim girdi örnekleri (Türkçe ve İngilizce)

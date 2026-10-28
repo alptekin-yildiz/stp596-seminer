@@ -8,9 +8,11 @@ Kullanım:
 Denetimler, SKILL.md'deki kontrol listesinin makineyle bakılabilen kısmıdır:
   pptx: slayt sayısı (15–20 içerik), zorunlu slaytlar (İçindekiler, Teşekkürler, Kaynaklar), punto (<18 uyarı;
         Kaynaklar, alt yazı, altbilgi, sayfa no hariç), madde sayısı (>5), kalan yer tutucular, görsel eksikliği,
-        kaynak numarası tutarlılığı ([n] metinde var, Kaynaklar'da yok), konuşma notu eksikliği, yapay zekâ satırı.
+        kaynak numarası tutarlılığı ([n] metinde var, Kaynaklar'da yok), konuşma notu eksikliği, yapay zekâ satırı,
+        punto tutarlılığı (başlıklar arası, slaytlar arası ve slayt içi gövde puntosu), elle yazılmış matematik.
   docx: bölümlerin doluluğu, Lorem ipsum kalıntısı, 1.1–2.2 benzerliği, özet uzunluğu, referans sayısı ve yıl,
-        metinde anılmayan/eksik referans numaraları, yapay zekâ beyanı, kalan yer tutucular.
+        metinde anılmayan/eksik referans numaraları, yapay zekâ beyanı, kalan yer tutucular, elle yazılmış matematik.
+Şekil ve grafiklerin içindeki yazı resim olduğundan denetlenemez; o kısım references/son_tur.md ile gözle bakılır.
 Türkçe ve İngilizce çıktıları tanır (bölüm ve slayt adları iki dilde aranır).
 Çıkış kodu: 0 sorun yok, 1 uyarı var.
 """
@@ -28,6 +30,25 @@ def has_k(title, keys): return any(k in tlow(title) or k in title.lower() for k 
 def starts_k(title, keys): return tlow(title).startswith(keys) or title.lower().startswith(keys)
 
 MARK = re.compile(r"\[(ÖĞRENCİ TAMAMLAYACAK|DOĞRULANACAK|ÖĞRENCİ KARARI)[^\]]*\]")
+
+# Denklem nesnesine dönüştürülmemiş, düz metinle yazılmış matematik izleri
+MATH = [
+    (re.compile(r"(?<![\w@./])[A-Za-zΑ-Ωα-ω]{1,3}_\{?[A-Za-z0-9α-ω∞]{1,6}\}?(?![\w@./])"), "alt çizgiyle indis (x_1)"),
+    (re.compile(r"[\w)\]]\^[\w{(\-+]"), "şapkayla üs (x^2)"),
+    (re.compile(r"\\(int|iint|oint|sum|prod|frac|sqrt|partial|nabla|infty|cdot|times|approx|leq?|geq?|neq|alpha|beta|gamma|delta|Delta|theta|lambda|mu|rho|sigma|omega|Omega|pi|phi|varphi|eta|epsilon|varepsilon|tau|mathrm|mathbf|left|right)\b"), "LaTeX komutu (\\int)"),
+    (re.compile(r"\$[^$\n]{1,80}\$"), "dolar işaretli LaTeX ($...$)"),
+    (re.compile(r"\b(sqrt|integral|int|sum|exp|ln|log)\s*\("), "fonksiyon adıyla yazılmış işlem (sqrt(...))"),
+    (re.compile(r"(?<=[\w)])\s?\*\s?(?=[\w(])"), "yıldızla çarpma (a*b)"),
+    (re.compile(r"(?<![<>=!])(<=|>=|!=)(?![<>=])"), "klavye karşılaştırması (<=, >=, !=)"),
+]
+
+def math_hits(text):
+    hits = []
+    for rx, label in MATH:
+        m = rx.search(text)
+        if m and "http" not in text[max(0, m.start() - 40):m.end()]:
+            hits.append(f"{label}: \"{text[max(0, m.start() - 15):m.end() + 15].strip()}\"")
+    return hits
 
 def check_docx(path):
     from docx import Document
@@ -78,6 +99,9 @@ def check_docx(path):
     abstract = next((t for st, t in paras if st == "Abstract"), "")
     n = len(abstract.split())
     if abstract and not (120 <= n <= 280): out.append(f"Özet {n} sözcük; hedef 150–250.")
+    for st, t in paras:
+        if st != "references" and t:
+            for h in math_hits(t): out.append(f"Elle yazılmış matematik, Word denklemine çevirin ({h})")
     refs = [t for st, t in paras if st == "references" and t]
     if len(refs) < 5: out.append(f"{len(refs)} referans; en az 5 beklenir.")
     hakemli = sum(1 for r in refs if re.search(r"\bc\.\s*\d|vol\.|doi:|Proc\.|Conf\.|Konferans|Sempozyum|Forum|J\.|Journal|Dergi|Transactions|Letters", r))
@@ -103,10 +127,16 @@ def check_pptx(path):
     slides = list(prs.slides)
     titles = []
     all_text = []
+    title_sizes = {}           # punto -> [slayt]
+    body_sizes = {}            # punto -> [slayt]
     for idx, s in enumerate(slides, 1):
         title = ""
         for sh in s.shapes:
-            if sh.has_text_frame and sh.name == "baslik": title = sh.text_frame.text.strip()
+            if sh.has_text_frame and sh.name == "baslik":
+                title = sh.text_frame.text.strip()
+                for p in sh.text_frame.paragraphs:
+                    for r in p.runs:
+                        if r.font.size is not None and r.text.strip(): title_sizes.setdefault(r.font.size.pt, []).append(idx)
         if not title and idx == 1: title = "(kapak)"
         if not title:
             for sh in s.shapes:
@@ -130,24 +160,40 @@ def check_pptx(path):
                                     out.append(f"Slayt {idx} ({title[:30]}): tabloda {r.font.size.pt:.0f} pt metin"); break
         for sh in s.shapes: walk(sh)
         bullets = 0
+        slide_sizes = set()
         for sh in texts:
             t = sh.text_frame.text
             all_text.append(t)
             for m in MARK.finditer(t): out.append(f"Slayt {idx}: işaret kaldı: {m.group(0)[:50]}")
-            if sh.name in ("altbilgi", "sayfa_no", "tesekkur_satirlar", "kapak_kunye", "tablo_not") or sh.name.startswith(("altyazi", "sayi", "gorsel", "zaman", "mesaj")) or sh.name.endswith(("_no", "_baslik")) or has_k(title, K_KAYNAK): continue
+            if not has_k(title, K_KAYNAK) and sh.name not in ("altbilgi", "sayfa_no"):
+                for line in t.split("\n"):
+                    for h in math_hits(line): out.append(f"Slayt {idx} ({title[:30]}): elle yazılmış matematik, denklem aracıyla yazın ({h})")
+            if sh.name in ("baslik", "altbilgi", "sayfa_no", "tesekkur_satirlar", "kapak_kunye", "tablo_not") or sh.name.startswith(("altyazi", "sayi", "gorsel", "zaman", "mesaj", "kapak_", "kapanis_")) or sh.name.endswith(("_no", "_baslik")) or has_k(title, K_KAYNAK): continue
             sh_bullets = 0
             for p in sh.text_frame.paragraphs:
                 if not p.text.strip(): continue
                 pPr = p._p.pPr
                 if pPr is not None and pPr.find("{http://schemas.openxmlformats.org/drawingml/2006/main}buChar") is not None: sh_bullets += 1
                 for r in p.runs:
+                    if r.font.size is not None and r.text.strip() and not sh.name.startswith("adim") and not has_k(title, K_ICINDEKILER):
+                        slide_sizes.add(r.font.size.pt)
+                for r in p.runs:
                     if r.font.size is not None and r.font.size < Pt(18) and r.text.strip():
                         out.append(f"Slayt {idx} ({title[:30]}): {r.font.size.pt:.0f} pt metin: \"{r.text[:30]}\""); break
             bullets = max(bullets, sh_bullets)
+        if len(slide_sizes) > 1:
+            out.append(f"Slayt {idx} ({title[:30]}): aynı slaytta farklı gövde puntoları ({', '.join(f'{z:g}' for z in sorted(slide_sizes))}); vurgu için kalın yazı kullanın, puntoyu değiştirmeyin.")
+        for z in slide_sizes: body_sizes.setdefault(z, []).append(idx)
         if bullets > 5: out.append(f"Slayt {idx} ({title[:30]}): bir kutuda {bullets} madde; en çok 5.")
         if not s.has_notes_slide or not s.notes_slide.notes_text_frame.text.strip():
             if idx != 1 and not has_k(title, K_YARDIMCI):
                 out.append(f"Slayt {idx} ({title[:30]}): konuşma notu yok.")
+    # deste geneli punto tutarlılığı: en sık punto esas, farklı olan slaytlar listelenir
+    for ad, sizes in (("Başlık", title_sizes), ("Gövde", body_sizes)):
+        if len(sizes) > 1:
+            esas = max(sizes, key=lambda z: len(sizes[z]))
+            farkli = "; ".join(f"{z:g} pt: slayt {', '.join(map(str, sorted(set(v))))}" for z, v in sorted(sizes.items()) if z != esas)
+            out.append(f"{ad} puntosu destede tutarsız: çoğu slayt {esas:g} pt, farklı olanlar {farkli}.")
     # görselsiz içerik slaytı oranı
     YAPI = ("gorsel", "tablo", "kart", "karsi", "adim", "zaman")
     def has_pic(shape):

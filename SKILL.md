@@ -80,7 +80,9 @@ Onaydan sonra `scripts/deste_kur.py` ile `assets/sunum_format_16x9.pptx` şablon
 
 ### 5. Kontrol
 
-`scripts/kontrol.py` ile iki dosyayı denetle (slayt sayısı, punto, zorunlu slaytlar, madde sayısı, konuşma notu, kaynak numaraları, form bölümlerinin birbirinin kopyası olmaması, Lorem kalıntısı, yer tutucular). Her uyarıyı öğrenciyle çöz ya da bilinçli bırakıldığını not et. Sonra aşağıdaki kontrol listesini öğrenciyle birlikte geç.
+`scripts/kontrol.py` ile iki dosyayı denetle (slayt sayısı, punto ve punto tutarlılığı, zorunlu slaytlar, madde sayısı, konuşma notu, kaynak numaraları, form bölümlerinin birbirinin kopyası olmaması, Lorem kalıntısı, yer tutucular, elle yazılmış matematik). Her uyarıyı öğrenciyle çöz ya da bilinçli bırakıldığını not et.
+
+Sonra **son göz turu**: `references/son_tur.md` dosyasını oku ve biten form ile sunumun üzerinden o listeyle baştan sona bir kez daha geç (punto tutarlılığı, şekil içi yazı, matematik yazımı, sembol tutarlılığı). Bu tur atlanmaz; betiğin göremediğini yakalar. Bulguları öğrenciye ver, düzeltmeleri onayla yap. En sonda aşağıdaki kontrol listesini öğrenciyle birlikte geç.
 
 ### 6. Teslim notu
 
@@ -119,9 +121,11 @@ Betikler yalnız Python ister: `python-docx`, `python-pptx` (ikisi de `pip insta
 - Her bulgunun yanında kaynak görünüyor; Kaynaklar slaydı IEEE biçiminde ve slayttaki her alıntıyı karşılıyor.
 - Sınırlılıklar öğrencinin ağzından söyleniyor; "deney yok ama güvenilir" türü cümle yok.
 - Yapay zekâ beyanı formda ve sunumda var.
+- Matematik klavyeyle değil denklem aracıyla ya da gerçek simgelerle yazılmış (`x_1`, `x^2`, `sqrt()` yok); semboller form ve sunumda aynı.
 
 **Dikkati tutuyor mu? (pathos)**
-- Her slaytta tek mesaj; madde sayısı en çok beş; punto 18'den küçük değil.
+- Her slaytta tek mesaj; madde sayısı en çok beş; punto 18'den küçük değil ve destede tek: başlıklar bir punto, gövde bir punto.
+- Şekil içi yazı okunur ve bütün görsellerde aynı puntoda.
 - Her grafiğin ekseni, birimi ve başlığı var; tek slaytta beşten az renk.
 - Süs animasyon, dekoratif görsel, "internetten" görsel yok; her görselin kaynağı var.
 - İçindekiler slaydı sunumun akışını ve kabaca süre dağılımını gösteriyor.

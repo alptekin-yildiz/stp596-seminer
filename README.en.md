@@ -42,7 +42,7 @@ Open a new Project; make the content of `SKILL.md` the project instructions; upl
 3. **Plan:** form sections and a slide-by-slide claim–evidence plan; at most 4 multi-option questions (headings, figures, slide patterns, indefensible points).
 4. **Form:** the agent shows the text and produces the `.docx` with your approval. Minimums apply: at least 850 words of text and 5 references.
 5. **Presentation:** slide texts, patterns (table, process, comparison, cards, timeline), optional click animation; the `.pptx` is produced with your approval.
-6. **Check and hand-over note:** `kontrol.py` checks the course rules automatically; the agent goes through the remaining items with you.
+6. **Check and hand-over note:** `kontrol.py` checks the course rules automatically (including font-size consistency and maths typed on the keyboard); the agent then makes one more pass over the finished form and slides for font sizes, text inside figures and equation typesetting, and goes through the remaining items with you. Font size is uniform across the deck: one size for titles, one for body text.
 
 The agent does not invent sources or add findings; it marks any standard domain knowledge it adds itself and deletes what you do not own. Gaps remain as `[ÖĞRENCİ TAMAMLAYACAK]` ("to be completed by the student") markers; nothing is submitted while they remain.
 
@@ -80,7 +80,7 @@ This table summarises the course guidelines; in case of conflict the course guid
 ```
 stp596-seminer/
 ├── SKILL.md              main instructions read by the agent (Agent Skills format)
-├── references/           interview tree, form and slide rules, animation, AI declaration, feedback report
+├── references/           interview tree, form and slide rules, final review pass, animation, AI declaration, feedback report
 ├── assets/               stp596_bilgilendirme_form.docx, sunum_format_16x9.pptx
 ├── scripts/              form_doldur.py, deste_kur.py, anim.py, kontrol.py (Python only)
 └── ornek/                anonymised example inputs (Turkish and English)

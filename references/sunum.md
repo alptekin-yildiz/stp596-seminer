@@ -38,9 +38,9 @@ Slayt başlığında başlık numarasını taşı: "3 · Giriş", "5 · Yöntem:
 **Dikkat (pathos)**
 - **Tek slayt, tek mesaj.** Slayt başlığı o mesajı söyleyebiliyorsa iyidir ("Kiriş ağırlığı %31,7 azaldı" > "Sonuçlar").
 - En çok 5 madde, maddede en çok 2 satır. Paragraf gerekiyorsa en çok 4 satır.
-- Punto 18'den küçük olmaz (Kaynaklar slaydında 14 olabilir). Metin sığmıyorsa slaydı böl, puntoyu küçültme. Boşluk kalıyorsa punto büyür (betik yapar) ya da slayda görsel gelir.
+- Punto 18'den küçük olmaz (Kaynaklar slaydında 14 olabilir). Metin sığmıyorsa slaydı böl, puntoyu küçültme. Punto **bütün destede tektir**: başlıklar bir punto, gövde bir punto; slayttan slayta ve slayt içinde değişmez (aşağıda "Tipografi ve matematik").
 - Yalnız metinden oluşan slayt sayısı içerik slaytlarının yarısını geçmesin; her iki slayttan birinde şema, grafik, tablo ya da fotoğraf olsun. Yöntem anlatan her slayt bir şema ister.
-- Grafik: eksen adı, birim, başlık, kaynak; tek slaytta en çok 4 renk; okunur yazı (grafik içi yazı da 14'ten küçük olmaz).
+- Grafik: eksen adı, birim, başlık, kaynak; tek slaytta en çok 4 renk; okunur yazı (grafik içi yazı da 14'ten küçük olmaz ve bütün görsellerde aynı puntodadır).
 - Süs animasyon, dekoratif görsel, ses, geçiş efekti yok. Animasyon yalnız bir akıl yürütmeyi adım adım açmak için (`animasyon.md`).
 - Konuşmacı ekrana değil dinleyiciye konuşur; konuşma notu slaytta değil notlar bölümünde.
 
@@ -68,7 +68,7 @@ Plan adımında her slayt için önce iddiayı, sonra kalıbı seç. Kalıp seç
 | Birkaç çarpıcı sayı | Üç sayı | `sayilar` |
 | Tek paragraf iddia (araştırma sorusu gibi) | Metin | `metin` |
 
-**Denklem içeren slayt:** ayrı tür yoktur; `metin` ya da `metin_gorsel` kalıbında denklem düz satır olarak (Unicode: θ, Ω, ², √) yazılır, altına değişkenlerin tanımı gelir. Karmaşık denklem görsel olarak eklenir (öğrencinin LaTeX çıktısı).
+**Denklem içeren slayt:** ayrı tür yoktur; `metin` ya da `metin_gorsel` kalıbında denklem, altına değişkenlerin tanımı gelir. Yazım kuralları aşağıda, "Tipografi ve matematik" bölümünde; `x_1`, `x^2`, `sqrt()` türü elle yazım kullanılmaz.
 
 **Literatür ve yöntem slaytlarında taban:** her literatür slaydında en az iki kaynak numarası; her yöntem slaydında bir şema, tablo ya da süreç kalıbı.
 
@@ -85,6 +85,27 @@ Dayanak: Mayer'in çoklu ortam ilkeleri (tutarlılık, işaretleme, fazlalık): 
 - Belirsizlik gösterilir: hata çubuğu, aralık, örneklem büyüklüğü. Yoksa altyazıda "belirsizlik hesaplanmadı".
 - Izgara soluk, çerçeve yok, efekt ve üç boyut yok. Tablo yerine grafik, grafik yerine cümle: hangisi daha az mürekkeple aynı şeyi söylüyorsa o.
 - Fotoğraf ve başkasının grafiği için kaynak ve lisans; "internetten" yok.
+
+
+## Tipografi ve matematik
+
+Öğrenci sunumlarında en sık görülen iki biçim hatası: slayttan slayta, hatta aynı slaytta değişen punto ve denklem yerine klavyeyle yazılmış matematik. İkisi de dinleyiciye özensizlik olarak yansır (ethos).
+
+**Punto ölçeği.** Destede her rolün tek puntosu vardır: slayt başlığı, gövde (madde, paragraf, kart ve karşılaştırma kutuları), süreç kutusu, tablo, alt yazı ve not satırı, Kaynaklar (14), sayfa numarası (12). `deste_kur.py` bu ölçeği kendisi kurar: önce her alana sığan en büyük puntoyu ölçer, sonra aynı roldeki bütün alanları en küçüğüyle yazar; çıktıda "Punto (deste geneli)" satırını ve puntoyu düşüren slaydı bildirir. Uzun bir başlık bütün başlıkları küçültür; dolu bir slayt bütün gövdeyi küçültür. Çözüm o başlığı kısaltmak ya da o slaydı bölmektir, tek slayda ayrı punto vermek değildir.
+- Vurgu kalın yazıyla yapılır, punto büyütülerek değil.
+- Öğrenci desteyi PowerPoint'te elle düzeltirse aynı ölçeği korur; yeni eklediği metin kutusu da gövde puntosundadır. `kontrol.py` slaytlar arası ve slayt içi farkı bildirir.
+- Tek yazı tipi ailesi: şablonunki (Helvetica). Şekillerde de tırnaksız (sans-serif) bir aile, mümkünse aynısı.
+
+**Şekil içi yazı.** Eksen etiketi, lejant, şema kutusu yazısı slaytta 14–18 pt görünür ve **bütün görsellerde aynı** puntodadır.
+- Görsel, slayttaki son boyutunda çizilir; sonradan küçültmek içindeki yazıyı da küçültür. Kutu ölçüleri (mesaj satırı varken): `gorsel` ≈ 11,7 × 4,6 inç, `metin_gorsel` ≈ 6,1 × 4,6 inç, `uc_gorsel` ≈ 3,95 × 4,0 inç. matplotlib'de `figsize` bu ölçüler, `font.size` bütün şekillerde aynı değer (16 gibi) olur.
+- Ajan çizmiyorsa (öğrencinin ya da kaynağın görseli) puntoyu ajan düzeltemez: farklı ya da küçük punto görürse öğrenciye söyler, şekli son boyutunda yeniden üretmesini ister.
+
+**Matematik yazımı.**
+- Klavye yazımı kullanılmaz: `x_1`, `V_inf`, `x^2`, `e^(-t)`, `a*b`, `sqrt(x)`, `int`, `sum`, `<=`, `>=`, `$…$`, `\alpha`. Doğrusu gerçek indis ve üs, gerçek simge: x₁, x², a·b ya da a × b, √x, ∫, Σ, ≤, ≥, α.
+- Tek satırlık basit ifade Unicode metinle yazılabilir (θ = 30°, Re ≈ 2·10⁵, vᵢ). Kesir, integral, toplam, iç içe indis ya da birden çok satır içeren denklem metin olarak yazılmaz: öğrencinin LaTeX ya da Word denklem çıktısı görsel olarak eklenir (ekran görüntüsü değil, gövde puntosuna denk boyutta). Çıktı yoksa slayta `[ÖĞRENCİ TAMAMLAYACAK: denklem (n), PowerPoint'te Ekle → Denklem ile]` yazılır ve öğrenciye denklemi kurulumdan sonra PowerPoint'in denklem aracıyla yazması söylenir.
+- Değişkenler italik, birimler, fonksiyon adları (sin, log, exp) ve diferansiyel d dik yazılır. Sayı ile birim arasında boşluk (10 m/s, 30 °C; açı derecesinde boşluk yok: 30°).
+- Aynı büyüklük her yerde aynı sembolle gösterilir (form ve sunum, slayt ve slayt); her sembol ilk geçtiği yerde tanımlanır.
+- Ondalık ayraç dile göre: Türkçede virgül (2,88 kg), İngilizcede nokta (2.88 kg); aynı belgede karışmaz.
 
 ## Şablon slayt türleri
 
@@ -209,8 +230,8 @@ Kapanış slaydının satırları S19 cevabından gelir: danışman, destek/fon 
 
 Katmanlı görsel: `metin_gorsel` ya da `gorsel` slaydında birden çok `![…](…)` verilirse görseller aynı kutuya üst üste konur ve tıklamayla açılır (bir şemanın kutularının sırayla belirmesi gibi). `~~~` grup sayısı ile görsel sayısı eşitse her tıklamada ilgili madde grubu ve katman birlikte gelir; alt yazı son katmanınkidir.
 
-Otomatik punto: betik, metin kısa kaldığında gövde puntosunu 24'e kadar büyütür ("boşluk varken yazıyı büyüt"); `punto:` satırı bunu sabitler.
+Punto: betik bütün destede tek gövde puntosu kullanır; metin az olduğunda bu punto 24'e kadar büyür, en dolu slayta göre belirlenir (yukarıda "Tipografi ve matematik"). `punto:` satırı tek bir slaydı bu ölçünün dışına çıkarır ve tutarlılığı bozar; betik bunu uyarı olarak bildirir.
 
 `mesaj:` satırı her içerik slaydında bulunmalı (İçindekiler ve Kaynaklar hariç). `###` satırları blok açar; blok içindeki `-` maddeler o bloğa aittir.
 
-Kurallar: her `##` bir slayt; köşeli parantezdeki tür yukarıdaki tablodan; `-` ile başlayan satır madde, diğer satırlar paragraf; `![alt yazı](dosya)` görsel; `>` konuşma notu; `~~~` gövdeyi tıklama gruplarına böler (en çok 3). Görsel dosyası yoksa betik yerine `[ÖĞRENCİ TAMAMLAYACAK: görsel]` kutusu koyar ve uyarır. `punto: 16` satırı bir slaydın gövde puntosunu düşürür; yalnız gerçekten gerekiyorsa ve 16'nın altına inmeden.
+Kurallar: her `##` bir slayt; köşeli parantezdeki tür yukarıdaki tablodan; `-` ile başlayan satır madde, diğer satırlar paragraf; `![alt yazı](dosya)` görsel; `>` konuşma notu; `~~~` gövdeyi tıklama gruplarına böler (en çok 3). Görsel dosyası yoksa betik yerine `[ÖĞRENCİ TAMAMLAYACAK: görsel]` kutusu koyar ve uyarır. `punto: 16` satırı bir slaydın gövde puntosunu değiştirir; kullanma, metin sığmıyorsa slaydı böl.
