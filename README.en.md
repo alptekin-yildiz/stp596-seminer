@@ -2,7 +2,7 @@
 
 [🇹🇷 Türkçe](README.md) · 🇬🇧 English
 
-![Beta](https://img.shields.io/badge/version-v0.1.1--beta-orange) ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
+![Beta](https://img.shields.io/badge/version-v0.2.0--beta-orange) ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
 
 An **agent skill** for preparing the seminar **information form** and the **40-minute seminar presentation** of the course **STP 596 Scientific Research, Ethics and Seminar** at the ITU Aviation Institute with an AI agent. The agent first interviews you, then builds the form and the slides from the course templates. The content is yours; the agent edits, formats and checks the rules.
 
