@@ -80,12 +80,15 @@ Dayanak: Mayer'in çoklu ortam ilkeleri (tutarlılık, işaretleme, fazlalık): 
 
 - Her grafikte başlık (ne, nerede, ne zaman), eksen adı ve birim, kaynak satırı; alt yazı "Şekil n." ile başlar.
 - Tek seri lacivert; ikinci seri bronz, üçüncü çelik mavisi. Dört renkten fazlası yok; renk yalnız anlam taşıyorsa değişir.
-- Yazı grafiğin içinde 14 pt'den küçük görünmesin: grafiği slayt ölçüsünde (ör. 6×4 inç, 130–150 dpi) üret.
+- Yazı grafiğin içinde 14 pt'den küçük görünmesin: grafiği slayt ölçüsünde (ör. 6×4 inç, 130–150 dpi) üret. Eksen adı, sayılar ve lejant bütün grafiklerde aynı puntoda.
+- **Slayt başına en çok 3 grafik**, yan yana ve her biri okunur boyutta. Görsel alanı ≈ 11,7 × 4,6 inçtir; 3×3 grafik konursa her biri ≈ 3,9 × 1,5 inçe düşer ve 14 pt yazıya yer kalmaz. Büyük çizilip küçültülen grafiğin yazısı da aynı oranda küçülür (16 pt, üçte birine küçültülünce ≈ 5 pt). Fazlası için: slaytlara böl; mesajı taşıyan bir iki grafiği seç, gerisini forma ya da yedek slayta taşı; ortak eksenli tek grafikte birleştir.
+- **Grafik başına en çok 4 seri** (eğri, çubuk grubu). Fazlası için asıl seriyi renkli, öbürlerini soluk gri çiz ya da grafiği böl. Lejant yerine serinin ucuna doğrudan etiket tercih edilir.
 - Eksen sıfırdan başlar; başlamıyorsa eksen kırığı ve not. Logaritmik eksen etikette yazılır.
 - Belirsizlik gösterilir: hata çubuğu, aralık, örneklem büyüklüğü. Yoksa altyazıda "belirsizlik hesaplanmadı".
 - Izgara soluk, çerçeve yok, efekt ve üç boyut yok. Tablo yerine grafik, grafik yerine cümle: hangisi daha az mürekkeple aynı şeyi söylüyorsa o.
 - Fotoğraf ve başkasının grafiği için kaynak ve lisans; "internetten" yok.
 
+**Bu sınırlar okunabilirlik önerisidir, ders kuralı değildir.** Ajan kendi yazdığı plan, slayt ve grafikte onlara uyar. Öğrencinin planı ya da kendi görseli sınırı aşıyorsa ek soru açmadan mevcut turda söyler: plan geçişinde "Görseller" sorusunun içinde, sonra son göz turunun bulgu listesinde; nedenini bir cümleyle ve bir öneriyle ("6. slaytta 6 grafik var, okunmaz; mesajı taşıyan ikisini seçip gerisini forma taşımayı öneririm"). Öğrenci yine de isterse bırakılır, `plan.md`'ye "bilinçli bırakıldı" notu düşülür ve `sorunlar.md`'ye `uyari` satırı yazılır (`geri_bildirim.md`).
 
 ## Tipografi ve matematik
 

@@ -211,7 +211,17 @@ def image_size(path):
     except Exception:
         return None
 
-def add_picture_fit(slide, path, x, y, w, h, name=None):
+def check_shrink(pic, label):
+    """Görsel çizildiği boyuttan çok küçültüldüyse uyarır: içindeki yazı da aynı oranda küçülür."""
+    dx, _ = pic.image.dpi
+    if dx == 72:          # çözünürlük bilgisi yok (python-pptx varsayılanı); ölçülemez
+        return
+    oran = pic.width / 914400 / (pic.image.size[0] / dx)
+    if oran < 0.7:
+        warn(f"'{label}': görsel çizildiği boyutun %{oran * 100:.0f}'ine küçültüldü; içindeki yazı da küçüldü (16 pt → ≈ {16 * oran:.0f} pt). "
+             f"Slayttaki boyutunda ({pic.width / 914400:.1f} × {pic.height / 914400:.1f} inç) yeniden üretin.")
+
+def add_picture_fit(slide, path, x, y, w, h, name=None, label=""):
     """Görseli (x,y,w,h) kutusuna sığdırıp ortalar."""
     size = image_size(path)
     if size:
@@ -226,6 +236,7 @@ def add_picture_fit(slide, path, x, y, w, h, name=None):
     px = int(Inches(x) + (Inches(w) - pw) / 2); py = int(Inches(y) + (Inches(h) - ph) / 2)
     pic = slide.shapes.add_picture(path, px, py, pw, ph)
     if name: set_name(pic, name)
+    check_shrink(pic, label or os.path.basename(path))
     return pic
 
 def place_image(slide, g, x, y, w, h, idx, caption_size=14, base_dir=".", cap_h=None):
@@ -234,7 +245,7 @@ def place_image(slide, g, x, y, w, h, idx, caption_size=14, base_dir=".", cap_h=
     if cap_h is None:
         cap_h = 0.55 if g["alt"] else 0
     if os.path.exists(path):
-        add_picture_fit(slide, path, x, y, w, h - cap_h, name=f"gorsel{idx}")
+        add_picture_fit(slide, path, x, y, w, h - cap_h, name=f"gorsel{idx}", label=f"{g.get('_slayt', '')[:40]} · {os.path.basename(path)}")
     else:
         warn(f"Görsel bulunamadı: {g['dosya']} (slayt: {g.get('_slayt','?')}); yer tutucu kondu.")
         box = slide.shapes.add_shape(1, Inches(x), Inches(y), Inches(w), Inches(h - cap_h))  # dikdörtgen
@@ -454,6 +465,8 @@ def build_uc_gorsel(slide, sl, meta, base_dir):
     for sh in list(slide.shapes):
         if sh.name.startswith("Dikdörtgen") or text_of(sh).strip().lower() == "görsel alan":
             remove_shape(sh)
+    if len(sl["gorseller"]) > 3:
+        warn(f"'{sl['baslik']}': {len(sl['gorseller'])} görsel verildi, slaytta yalnız ilk 3'ü yer alır; fazlası okunmaz. Slaydı bölün ya da mesajı taşıyanları seçin.")
     gs = (sl["gorseller"] + [{"alt": "", "dosya": "(yok)"}] * 3)[:3]
     for i, g in enumerate(gs, 1):
         g["_slayt"] = sl["baslik"]
@@ -799,7 +812,7 @@ def main():
         ap_path = os.path.join(os.path.dirname(os.path.abspath(a.cikti)), "anim.json")
         json.dump(anim, open(ap_path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         print(f"Tıklama senaryosu yazıldı: {ap_path}  → python3 scripts/anim.py \"{a.cikti}\" \"{ap_path}\"")
-    for w in WARN:
+    for w in dict.fromkeys(WARN):     # aynı uyarıyı bir kez yaz
         print("UYARI:", w)
 
 if __name__ == "__main__":

@@ -9,7 +9,9 @@ Denetimler, SKILL.md'deki kontrol listesinin makineyle bakılabilen kısmıdır:
   pptx: slayt sayısı (15–20 içerik), zorunlu slaytlar (İçindekiler, Teşekkürler, Kaynaklar), punto (<18 uyarı;
         Kaynaklar, alt yazı, altbilgi, sayfa no hariç), madde sayısı (>5), kalan yer tutucular, görsel eksikliği,
         kaynak numarası tutarlılığı ([n] metinde var, Kaynaklar'da yok), konuşma notu eksikliği, yapay zekâ satırı,
-        punto tutarlılığı (başlıklar arası, slaytlar arası ve slayt içi gövde puntosu), elle yazılmış matematik.
+        punto tutarlılığı (başlıklar arası, slaytlar arası ve slayt içi gövde puntosu), elle yazılmış matematik,
+        görseller (slaytta aynı anda 3'ten çok görsel/grafik, çizildiği boyuttan çok küçültülmüş ya da çok küçük görsel;
+        PowerPoint grafik nesnesinde 4'ten çok seri ve 14 pt'den küçük ya da grafikler arası farklı punto).
   docx: bölümlerin doluluğu, Lorem ipsum kalıntısı, 1.1–2.2 benzerliği, özet uzunluğu, referans sayısı ve yıl,
         metinde anılmayan/eksik referans numaraları, yapay zekâ beyanı, kalan yer tutucular, elle yazılmış matematik.
 Şekil ve grafiklerin içindeki yazı resim olduğundan denetlenemez; o kısım references/son_tur.md ile gözle bakılır.
@@ -119,6 +121,60 @@ def check_docx(path):
         if k not in cited: out.append(f"Referans [{k}] metinde hiç anılmamış.")
     return out
 
+def shrink_ratio(pic):
+    """Görselin çizildiği boyuta göre küçültme oranı; çözünürlük bilgisi yoksa None."""
+    dx, _ = pic.image.dpi
+    if dx == 72:          # python-pptx'in varsayılanı: bilgi yok
+        return None
+    return pic.width / 914400 / (pic.image.size[0] / dx)
+
+def check_visuals(idx, title, s, out, chart_sizes):
+    """Görsel sayısı, küçültme, küçük görsel; PowerPoint grafiklerinde seri sayısı ve punto."""
+    from pptx.util import Pt
+    visuals = []
+    def walk(sh):
+        if sh.shape_type == 6:
+            for c in sh.shapes: walk(c)
+        elif sh.shape_type == 13 or getattr(sh, "has_chart", False):
+            visuals.append(sh)
+    for sh in s.shapes: walk(sh)
+    # tıklamayla üst üste açılan katmanlar aynı merkezdedir; aynı anda görünen görsel sayısı = farklı merkez sayısı
+    centers = {(round((v.left + v.width / 2) / 914400, 1), round((v.top + v.height / 2) / 914400, 1)) for v in visuals}
+    if len(centers) > 3:
+        out.append(f"Slayt {idx} ({title[:30]}): aynı anda {len(centers)} görsel/grafik görünüyor; 3'ten fazlası okunmaz. Bölün ya da mesajı taşıyanları seçin (okunabilirlik önerisi).")
+    small, shrunk = [], []
+    for v in visuals:
+        w_in, h_in = v.width / 914400, v.height / 914400
+        if w_in < 2.5 and h_in < 2.5:
+            small.append(f"{w_in:.1f} × {h_in:.1f}")
+        if v.shape_type == 13:
+            oran = shrink_ratio(v)
+            if oran is not None and oran < 0.7:
+                shrunk.append((oran, f"{w_in:.1f} × {h_in:.1f}"))
+    if small:
+        out.append(f"Slayt {idx} ({title[:30]}): {len(small)} görsel çok küçük ({', '.join(sorted(set(small)))} inç); grafikse içindeki yazı okunmaz.")
+    if shrunk:
+        en = min(shrunk)
+        out.append(f"Slayt {idx} ({title[:30]}): {len(shrunk)} görsel çizildiği boyuttan küçültülmüş (en çok %{en[0] * 100:.0f}'ine); içindeki yazı da küçüldü (16 pt → ≈ {16 * en[0]:.0f} pt). Slayttaki boyutunda ({en[1]} inç) yeniden üretin.")
+        if getattr(v, "has_chart", False):
+            ch = v.chart
+            n = sum(len(list(pl.series)) for pl in ch.plots)
+            if n > 4:
+                out.append(f"Slayt {idx} ({title[:30]}): grafikte {n} seri; 4'ten fazlası okunmaz. Asıl seriyi öne çıkarın ya da grafiği bölün (okunabilirlik önerisi).")
+            sizes = set()
+            if ch.font.size is not None: sizes.add(ch.font.size.pt)
+            for ax_name in ("category_axis", "value_axis"):
+                try:
+                    ax = getattr(ch, ax_name)
+                    if ax.tick_labels.font.size is not None: sizes.add(ax.tick_labels.font.size.pt)
+                except Exception:
+                    pass
+            if ch.has_legend and ch.legend.font.size is not None: sizes.add(ch.legend.font.size.pt)
+            small = sorted(z for z in sizes if z < 14)
+            if small:
+                out.append(f"Slayt {idx} ({title[:30]}): grafik yazısı {', '.join(f'{z:g}' for z in small)} pt; slaytta en az 14 pt olmalı.")
+            for z in sizes: chart_sizes.setdefault(z, []).append(idx)
+
 def check_pptx(path):
     from pptx import Presentation
     from pptx.util import Pt
@@ -128,6 +184,7 @@ def check_pptx(path):
     titles = []
     all_text = []
     title_sizes = {}           # punto -> [slayt]
+    chart_sizes = {}           # PowerPoint grafik nesnelerinin puntoları -> [slayt]
     body_sizes = {}            # punto -> [slayt]
     for idx, s in enumerate(slides, 1):
         title = ""
@@ -159,6 +216,8 @@ def check_pptx(path):
                                 if r.font.size is not None and r.font.size < Pt(14) and r.text.strip():
                                     out.append(f"Slayt {idx} ({title[:30]}): tabloda {r.font.size.pt:.0f} pt metin"); break
         for sh in s.shapes: walk(sh)
+        if idx != 1 and not has_k(title, K_TESEKKUR):
+            check_visuals(idx, title, s, out, chart_sizes)
         bullets = 0
         slide_sizes = set()
         for sh in texts:
@@ -189,7 +248,7 @@ def check_pptx(path):
             if idx != 1 and not has_k(title, K_YARDIMCI):
                 out.append(f"Slayt {idx} ({title[:30]}): konuşma notu yok.")
     # deste geneli punto tutarlılığı: en sık punto esas, farklı olan slaytlar listelenir
-    for ad, sizes in (("Başlık", title_sizes), ("Gövde", body_sizes)):
+    for ad, sizes in (("Başlık", title_sizes), ("Gövde", body_sizes), ("Grafik yazısı", chart_sizes)):
         if len(sizes) > 1:
             esas = max(sizes, key=lambda z: len(sizes[z]))
             farkli = "; ".join(f"{z:g} pt: slayt {', '.join(map(str, sorted(set(v))))}" for z, v in sorted(sizes.items()) if z != esas)

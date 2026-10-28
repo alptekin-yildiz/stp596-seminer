@@ -51,7 +51,7 @@ Konu seçiminde dersin sırası kesindir: **birinci tercih tez çalışması**. 
 Görüşme çıktısından bir plan yaz ve onaylat. Planın sonunda deste geneline bakan **en çok 4 çoklu-öneri sorusu** sor (biçim `references/gorusme.md`, "Çoklu-öneri sorusu"): numaralı liste, önerili seçim, cevap numarayla.
 
 1. **Başlıklar ve bütçe:** hangi başlıklar düşüyor (Teşekkürler ve Kaynaklar kalır), slaytların başlıklara dağılımı (15–20 içerik slaydı; bulgusuz sunumda Literatür ve Yöntem gövdeyi taşır), birleştirme ya da bölme önerileri.
-2. **Görseller:** hangi slayta ne lazım; kim çizecek (öğrenci / ajan, beyan edilir); yeniden çizilecekler. Ajan çizecekse içerik öğrenciden gelir.
+2. **Görseller:** hangi slayta ne lazım; kim çizecek (öğrenci / ajan, beyan edilir); yeniden çizilecekler. Ajan çizecekse içerik öğrenciden gelir. Slayt başına 3'ten çok grafik ya da grafik başına 4'ten çok seri planlanmışsa burada söyle ve bölmeyi ya da seçmeyi öner (okunabilirlik önerisi, ders kuralı değil; `references/sunum.md`, "Grafik kuralları").
 3. **Kalıplar:** salt metin kalan slaytlardan tablo, süreç, karşılaştırma, kart ya da zaman çizelgesine çevrilmesi önerilenler.
 4. **Savunulamayacak noktalar:** görüşmedeki tetikleyiciler varsa (bkz. gorusme.md), yoksa bu soru yok.
 
@@ -125,7 +125,7 @@ Betikler yalnız Python ister: `python-docx`, `python-pptx` (ikisi de `pip insta
 
 **Dikkati tutuyor mu? (pathos)**
 - Her slaytta tek mesaj; madde sayısı en çok beş; punto 18'den küçük değil ve destede tek: başlıklar bir punto, gövde bir punto.
-- Şekil içi yazı okunur ve bütün görsellerde aynı puntoda.
+- Şekil içi yazı okunur ve bütün görsellerde aynı puntoda; slaytta en çok 3 grafik, grafikte en çok 4 seri (aşılan yerler öğrenciyle konuşuldu).
 - Her grafiğin ekseni, birimi ve başlığı var; tek slaytta beşten az renk.
 - Süs animasyon, dekoratif görsel, "internetten" görsel yok; her görselin kaynağı var.
 - İçindekiler slaydı sunumun akışını ve kabaca süre dağılımını gösteriyor.

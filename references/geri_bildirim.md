@@ -18,6 +18,7 @@ Her satır bir olay: `adım · tür · ne oldu · ne yapıldı`. Türler:
 - `durum`: yönergenin karşılamadığı durum (tez yok, eş danışman, İngilizce ve Türkçe karışık kaynaklar, görsel yok, öğrenci belgesiz geldi).
 - `butce`: soru ya da onay bütçesinin aşılması; kaç soru, hangi turda, neden.
 - `ogrenci`: öğrencinin takıldığı adım (kurulum, betik, görsel hazırlama, görüşme uzunluğu); yalnız gözlem, yargı yok.
+- `uyari`: öğrencinin bilerek bıraktığı okunabilirlik uyarısı; yalnız kural ve sayı, içerik yok (ör. "slayt başına grafik · 6 grafikli slayt · öğrenci tuttu").
 - `calisti`: sorunsuz tamamlanan önemli adım (ör. "deste_kur 20 slayt, uyarı yok").
 
 ## `geri_bildirim.md` şablonu
@@ -33,6 +34,7 @@ Dil: [tr / en] · Konu türü: [tez / tez konusu + literatür / bitirme-proje] �
 Görüşme: [n] tur, [n] soru (bütçe 23) · Plan geçişi: [n] soru · Taslak geçişi: [n] soru
 Form: [n] sözcük, [n] kaynak · Sunum: [n] içerik slaydı, [n] salt metin, animasyon: [evet/hayır]
 kontrol.py: form [n] uyarı, sunum [n] uyarı; bilinçli bırakılanlar: [kısa]
+Bilerek bırakılan okunabilirlik uyarıları: [kural: n, ör. "slayt başına grafik: 1, grafik başına seri: 0, punto: 0"]
 
 ## Betik hataları
 - [komut] → [hata metni ilk satır] → [çözüm ya da çözümsüz]
